@@ -37,7 +37,7 @@ const Transactions = (props: Props) => {
 
   useEffect(() => {
     getData();
-  });
+  }, []);
 
   return <p>{JSON.stringify(data)}</p>;
 };
