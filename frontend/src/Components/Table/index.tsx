@@ -1,49 +1,39 @@
 import React from "react";
-
-import { DataItem, Categories } from "../../dataUtilities";
-import Identity from "./Identity";
-
-import styles from "./index.module.scss";
+import styles from "./Table.module.css";
+import { Data, Categories } from "../../interfaces";
 
 interface Props {
-  data: Array<DataItem>;
-  categories: Array<Categories>;
+  categories: Categories[];
+  data: Data[];
   isIdentity: boolean;
+  isTransactions?: boolean;
 }
 
-const Table = (props: Props) => {
-  const maxRows = 15;
-  // regular table
-  const headers = props.categories.map((category, index) => (
-    <th key={index} className={styles.headerField}>
-      {category.title}
-    </th>
-  ));
-
-  const rows = props.data
-    .map((item: DataItem | any, index) => (
-      <tr key={index} className={styles.dataRows}>
-        {props.categories.map((category: Categories, index) => (
-          <td key={index} className={styles.dataField}>
-            {item[category.field]}
-          </td>
-        ))}
-      </tr>
-    ))
-    .slice(0, maxRows);
-
-  return props.isIdentity ? (
-    <Identity data={props.data} categories={props.categories} />
-  ) : (
-    <table className={styles.dataTable}>
-      <thead className={styles.header}>
-        <tr className={styles.headerRow}>{headers}</tr>
+export const Table: React.FC<Props> = ({ categories, data, isIdentity, isTransactions }) => {
+  return (
+    <table className={styles.table}>
+      <thead>
+        <tr>
+          {categories.map((category) => (
+            <th key={category}>{category}</th>
+          ))}
+        </tr>
       </thead>
-      <tbody className={styles.body}>{rows}</tbody>
+      <tbody>
+        {data.map((item, index) => (
+          <tr key={`row-${index}`}>
+            {categories.map((category, catIndex) => (
+              <td key={`cell-${index}-${catIndex}`}>
+                {isIdentity && category === "amount" ? (
+                  <span className={styles.identity}>{item[category as keyof typeof item]}</span>
+                ) : (
+                  item[category as keyof typeof item]
+                )}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
     </table>
   );
 };
-
-Table.displayName = "Table";
-
-export default Table;
