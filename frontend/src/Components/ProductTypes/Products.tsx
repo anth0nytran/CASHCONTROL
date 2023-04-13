@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
-
-import Transactions from "../Transactions";
+import { Transactions } from "../Transactions";
 import Context from "../../Context";
 import ProductTypesContainer from "./ProductTypesContainer";
 import {
