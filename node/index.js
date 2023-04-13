@@ -1,31 +1,36 @@
-'use strict';
+"use strict";
 
 // read env vars from .env file
-require('dotenv').config();
-const { Configuration, PlaidApi, Products, PlaidEnvironments} = require('plaid');
-const util = require('util');
-const { v4: uuidv4 } = require('uuid');
-const express = require('express');
-const bodyParser = require('body-parser');
-const moment = require('moment');
-const cors = require('cors');
+require("dotenv").config();
+const {
+  Configuration,
+  PlaidApi,
+  Products,
+  PlaidEnvironments,
+} = require("plaid");
+const util = require("util");
+const { v4: uuidv4 } = require("uuid");
+const express = require("express");
+const bodyParser = require("body-parser");
+const moment = require("moment");
+const cors = require("cors");
 
 const APP_PORT = process.env.APP_PORT || 8000;
 const PLAID_CLIENT_ID = process.env.PLAID_CLIENT_ID;
 const PLAID_SECRET = process.env.PLAID_SECRET;
-const PLAID_ENV = process.env.PLAID_ENV || 'sandbox';
+const PLAID_ENV = process.env.PLAID_ENV || "sandbox";
 
 // PLAID_PRODUCTS is a comma-separated list of products to use when initializing
 // Link. Note that this list must contain 'assets' in order for the app to be
 // able to create and retrieve asset reports.
-const PLAID_PRODUCTS = (process.env.PLAID_PRODUCTS || Products.Transactions).split(
-  ',',
-);
+const PLAID_PRODUCTS = (
+  process.env.PLAID_PRODUCTS || Products.Transactions
+).split(",");
 
 // PLAID_COUNTRY_CODES is a comma-separated list of countries for which users
 // will be able to select institutions from.
-const PLAID_COUNTRY_CODES = (process.env.PLAID_COUNTRY_CODES || 'US').split(
-  ',',
+const PLAID_COUNTRY_CODES = (process.env.PLAID_COUNTRY_CODES || "US").split(
+  ","
 );
 
 // Parameters used for the OAuth redirect Link flow.
@@ -35,11 +40,11 @@ const PLAID_COUNTRY_CODES = (process.env.PLAID_COUNTRY_CODES || 'US').split(
 // that the bank website should redirect to. You will need to configure
 // this redirect URI for your client ID through the Plaid developer dashboard
 // at https://dashboard.plaid.com/team/api.
-const PLAID_REDIRECT_URI = process.env.PLAID_REDIRECT_URI || '';
+const PLAID_REDIRECT_URI = process.env.PLAID_REDIRECT_URI || "";
 
 // Parameter used for OAuth in Android. This should be the package name of your app,
 // e.g. com.plaid.linksample
-const PLAID_ANDROID_PACKAGE_NAME = process.env.PLAID_ANDROID_PACKAGE_NAME || '';
+const PLAID_ANDROID_PACKAGE_NAME = process.env.PLAID_ANDROID_PACKAGE_NAME || "";
 
 // We store the access_token in memory - in production, store it in a secure
 // persistent data store
@@ -62,9 +67,9 @@ const configuration = new Configuration({
   basePath: PlaidEnvironments[PLAID_ENV],
   baseOptions: {
     headers: {
-      'PLAID-CLIENT-ID': PLAID_CLIENT_ID,
-      'PLAID-SECRET': PLAID_SECRET,
-      'Plaid-Version': '2020-09-14',
+      "PLAID-CLIENT-ID": PLAID_CLIENT_ID,
+      "PLAID-SECRET": PLAID_SECRET,
+      "Plaid-Version": "2020-09-14",
     },
   },
 });
@@ -75,12 +80,12 @@ const app = express();
 app.use(
   bodyParser.urlencoded({
     extended: false,
-  }),
+  })
 );
 app.use(bodyParser.json());
 app.use(cors());
 
-app.post('/api/info', function (request, response, next) {
+app.post("/api/info", function (request, response, next) {
   response.json({
     item_id: ITEM_ID,
     access_token: ACCESS_TOKEN,
@@ -90,25 +95,25 @@ app.post('/api/info', function (request, response, next) {
 
 // Create a link token with configs which we can then use to initialize Plaid Link client-side.
 // See https://plaid.com/docs/#create-link-token
-app.post('/api/create_link_token', function (request, response, next) {
+app.post("/api/create_link_token", function (request, response, next) {
   Promise.resolve()
     .then(async function () {
       const configs = {
         user: {
           // This should correspond to a unique id for the current user.
-          client_user_id: 'user-id',
+          client_user_id: "user-id",
         },
-        client_name: 'CashControl',
+        client_name: "CashControl",
         products: PLAID_PRODUCTS,
         country_codes: PLAID_COUNTRY_CODES,
-        language: 'en',
+        language: "en",
       };
 
-      if (PLAID_REDIRECT_URI !== '') {
+      if (PLAID_REDIRECT_URI !== "") {
         configs.redirect_uri = PLAID_REDIRECT_URI;
       }
 
-      if (PLAID_ANDROID_PACKAGE_NAME !== '') {
+      if (PLAID_ANDROID_PACKAGE_NAME !== "") {
         configs.android_package_name = PLAID_ANDROID_PACKAGE_NAME;
       }
       const createTokenResponse = await client.linkTokenCreate(configs);
@@ -124,19 +129,19 @@ app.post('/api/create_link_token', function (request, response, next) {
 // - https://plaid.com/docs/payment-initiation/
 // - https://plaid.com/docs/#payment-initiation-create-link-token-request
 app.post(
-  '/api/create_link_token_for_payment',
+  "/api/create_link_token_for_payment",
   function (request, response, next) {
     Promise.resolve()
       .then(async function () {
         const createRecipientResponse =
           await client.paymentInitiationRecipientCreate({
-            name: 'Harry Potter',
-            iban: 'GB33BUKB20201555555555',
+            name: "Harry Potter",
+            iban: "GB33BUKB20201555555555",
             address: {
-              street: ['4 Privet Drive'],
-              city: 'Little Whinging',
-              postal_code: '11111',
-              country: 'GB',
+              street: ["4 Privet Drive"],
+              city: "Little Whinging",
+              postal_code: "11111",
+              country: "GB",
             },
           });
         const recipientId = createRecipientResponse.data.recipient_id;
@@ -145,10 +150,10 @@ app.post(
         const createPaymentResponse =
           await client.paymentInitiationPaymentCreate({
             recipient_id: recipientId,
-            reference: 'paymentRef',
+            reference: "paymentRef",
             amount: {
               value: 1.23,
-              currency: 'GBP',
+              currency: "GBP",
             },
           });
         prettyPrintResponse(createPaymentResponse);
@@ -159,7 +164,7 @@ app.post(
         PAYMENT_ID = paymentId;
 
         const configs = {
-          client_name: 'CashControl',
+          client_name: "CashControl",
           user: {
             // This should correspond to a unique id for the current user.
             // Typically, this will be a user ID number from your application.
@@ -168,14 +173,14 @@ app.post(
           },
           // Institutions from all listed countries will be shown.
           country_codes: PLAID_COUNTRY_CODES,
-          language: 'en',
+          language: "en",
           // The 'payment_initiation' product has to be the only element in the 'products' list.
           products: [Products.PaymentInitiation],
           payment_initiation: {
             payment_id: paymentId,
           },
         };
-        if (PLAID_REDIRECT_URI !== '') {
+        if (PLAID_REDIRECT_URI !== "") {
           configs.redirect_uri = PLAID_REDIRECT_URI;
         }
         const createTokenResponse = await client.linkTokenCreate(configs);
@@ -183,13 +188,13 @@ app.post(
         response.json(createTokenResponse.data);
       })
       .catch(next);
-  },
+  }
 );
 
 // Exchange token flow - exchange a Link public_token for
 // an API access_token
 // https://plaid.com/docs/#exchange-token-flow
-app.post('/api/set_access_token', function (request, response, next) {
+app.post("/api/set_access_token", function (request, response, next) {
   PUBLIC_TOKEN = request.body.public_token;
   Promise.resolve()
     .then(async function () {
@@ -214,7 +219,7 @@ app.post('/api/set_access_token', function (request, response, next) {
 
 // Retrieve ACH or ETF Auth data for an Item's accounts
 // https://plaid.com/docs/#auth
-app.get('/api/auth', function (request, response, next) {
+app.get("/api/auth", function (request, response, next) {
   Promise.resolve()
     .then(async function () {
       const authResponse = await client.authGet({
@@ -228,51 +233,69 @@ app.get('/api/auth', function (request, response, next) {
 
 // Retrieve Transactions for an Item
 // https://plaid.com/docs/#transactions
-app.get('/api/transactions', function (request, response, next) {
-  Promise.resolve()
-    .then(async function () {
-      // Set cursor to empty to receive all historical updates
-      let cursor = null;
+app.get("/api/transactions", async (req, res) => {
+  // Get start_date and end_date from the request query parameters
+  const { start_date, end_date } = req.query;
 
-      // New transaction updates since "cursor"
-      let added = [];
-      let modified = [];
-      // Removed transaction ids
-      let removed = [];
-      let hasMore = true;
-      // Iterate through each page of new transaction updates for item
-      while (hasMore) {
-        const request = {
-          access_token: ACCESS_TOKEN,
-          cursor: cursor,
-        };
-        const response = await client.transactionsSync(request)
-        const data = response.data;
-        // Add this page of results
-        added = added.concat(data.added);
-        modified = modified.concat(data.modified);
-        removed = removed.concat(data.removed);
-        hasMore = data.has_more;
-        // Update cursor to the next cursor
-        cursor = data.next_cursor;
-        prettyPrintResponse(response);
-      }
+  try {
+    // Retrieve transactions from Plaid
+    const response = await client.transactions.get(
+      ACCESS_TOKEN,
+      start_date,
+      end_date
+    );
 
-      const compareTxnsByDateAscending = (a, b) => (a.date > b.date) - (a.date < b.date);
-      // Return the 8 most recent transactions
-      const recently_added = [...added].sort(compareTxnsByDateAscending).slice(-8);
-      response.json({latest_transactions: recently_added});
-    })
-    .catch(next);
+    res.json(response.transactions);
+  } catch (error) {
+    console.error(`Error fetching transactions: ${error}`);
+    res.sendStatus(500);
+  }
 });
+// app.get('/api/transactions', function (request, response, next) {
+//   Promise.resolve()
+//     .then(async function () {
+//       // Set cursor to empty to receive all historical updates
+//       let cursor = null;
+
+//       // New transaction updates since "cursor"
+//       let added = [];
+//       let modified = [];
+//       // Removed transaction ids
+//       let removed = [];
+//       let hasMore = true;
+//       // Iterate through each page of new transaction updates for item
+//       while (hasMore) {
+//         const request = {
+//           access_token: ACCESS_TOKEN,
+//           cursor: cursor,
+//         };
+//         const response = await client.transactionsSync(request)
+//         const data = response.data;
+//         // Add this page of results
+//         added = added.concat(data.added);
+//         modified = modified.concat(data.modified);
+//         removed = removed.concat(data.removed);
+//         hasMore = data.has_more;
+//         // Update cursor to the next cursor
+//         cursor = data.next_cursor;
+//         prettyPrintResponse(response);
+//       }
+
+//       const compareTxnsByDateAscending = (a, b) => (a.date > b.date) - (a.date < b.date);
+//       // Return the 8 most recent transactions
+//       const recently_added = [...added].sort(compareTxnsByDateAscending).slice(-8);
+//       response.json({latest_transactions: recently_added});
+//     })
+//     .catch(next);
+// });
 
 // Retrieve Investment Transactions for an Item
 // https://plaid.com/docs/#investments
-app.get('/api/investments_transactions', function (request, response, next) {
+app.get("/api/investments_transactions", function (request, response, next) {
   Promise.resolve()
     .then(async function () {
-      const startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
-      const endDate = moment().format('YYYY-MM-DD');
+      const startDate = moment().subtract(30, "days").format("YYYY-MM-DD");
+      const endDate = moment().format("YYYY-MM-DD");
       const configs = {
         access_token: ACCESS_TOKEN,
         start_date: startDate,
@@ -291,7 +314,7 @@ app.get('/api/investments_transactions', function (request, response, next) {
 
 // Retrieve Identity for an Item
 // https://plaid.com/docs/#identity
-app.get('/api/identity', function (request, response, next) {
+app.get("/api/identity", function (request, response, next) {
   Promise.resolve()
     .then(async function () {
       const identityResponse = await client.identityGet({
@@ -305,7 +328,7 @@ app.get('/api/identity', function (request, response, next) {
 
 // Retrieve real-time Balances for each of an Item's accounts
 // https://plaid.com/docs/#balance
-app.get('/api/balance', function (request, response, next) {
+app.get("/api/balance", function (request, response, next) {
   Promise.resolve()
     .then(async function () {
       const balanceResponse = await client.accountsBalanceGet({
@@ -319,7 +342,7 @@ app.get('/api/balance', function (request, response, next) {
 
 // Retrieve Holdings for an Item
 // https://plaid.com/docs/#investments
-app.get('/api/holdings', function (request, response, next) {
+app.get("/api/holdings", function (request, response, next) {
   Promise.resolve()
     .then(async function () {
       const holdingsResponse = await client.investmentsHoldingsGet({
@@ -333,7 +356,7 @@ app.get('/api/holdings', function (request, response, next) {
 
 // Retrieve Liabilities for an Item
 // https://plaid.com/docs/#liabilities
-app.get('/api/liabilities', function (request, response, next) {
+app.get("/api/liabilities", function (request, response, next) {
   Promise.resolve()
     .then(async function () {
       const liabilitiesResponse = await client.liabilitiesGet({
@@ -347,7 +370,7 @@ app.get('/api/liabilities', function (request, response, next) {
 
 // Retrieve information about an Item
 // https://plaid.com/docs/#retrieve-item
-app.get('/api/item', function (request, response, next) {
+app.get("/api/item", function (request, response, next) {
   Promise.resolve()
     .then(async function () {
       // Pull the Item - this includes information about available products,
@@ -372,7 +395,7 @@ app.get('/api/item', function (request, response, next) {
 
 // Retrieve an Item's accounts
 // https://plaid.com/docs/#accounts
-app.get('/api/accounts', function (request, response, next) {
+app.get("/api/accounts", function (request, response, next) {
   Promise.resolve()
     .then(async function () {
       const accountsResponse = await client.accountsGet({
@@ -388,7 +411,7 @@ app.get('/api/accounts', function (request, response, next) {
 // Asset Report can contain up to 100 items, but for simplicity we're only
 // including one Item here.
 // https://plaid.com/docs/#assets
-app.get('/api/assets', function (request, response, next) {
+app.get("/api/assets", function (request, response, next) {
   Promise.resolve()
     .then(async function () {
       // You can specify up to two years of transaction history for an Asset
@@ -399,16 +422,16 @@ app.get('/api/assets', function (request, response, next) {
       // generation, as well as information that you want included in the Asset
       // Report. All fields are optional.
       const options = {
-        client_report_id: 'Custom Report ID #123',
+        client_report_id: "Custom Report ID #123",
         // webhook: 'https://your-domain.tld/plaid-webhook',
         user: {
-          client_user_id: 'Custom User ID #456',
-          first_name: 'Alice',
-          middle_name: 'Bobcat',
-          last_name: 'Cranberry',
-          ssn: '123-45-6789',
-          phone_number: '555-123-4567',
-          email: 'alice@example.com',
+          client_user_id: "Custom User ID #456",
+          first_name: "Alice",
+          middle_name: "Bobcat",
+          last_name: "Cranberry",
+          ssn: "123-45-6789",
+          phone_number: "555-123-4567",
+          email: "alice@example.com",
         },
       };
       const configs = {
@@ -422,26 +445,26 @@ app.get('/api/assets', function (request, response, next) {
         assetReportCreateResponse.data.asset_report_token;
       const getResponse = await getAssetReportWithRetries(
         client,
-        assetReportToken,
+        assetReportToken
       );
       const pdfRequest = {
         asset_report_token: assetReportToken,
       };
 
       const pdfResponse = await client.assetReportPdfGet(pdfRequest, {
-        responseType: 'arraybuffer',
+        responseType: "arraybuffer",
       });
       prettyPrintResponse(getResponse);
       prettyPrintResponse(pdfResponse);
       response.json({
         json: getResponse.data.report,
-        pdf: pdfResponse.data.toString('base64'),
+        pdf: pdfResponse.data.toString("base64"),
       });
     })
     .catch(next);
 });
 
-app.get('/api/transfer', function (request, response, next) {
+app.get("/api/transfer", function (request, response, next) {
   Promise.resolve()
     .then(async function () {
       const transferGetResponse = await client.transferGet({
@@ -458,7 +481,7 @@ app.get('/api/transfer', function (request, response, next) {
 
 // This functionality is only relevant for the UK/EU Payment Initiation product.
 // Retrieve Payment for a specified Payment ID
-app.get('/api/payment', function (request, response, next) {
+app.get("/api/payment", function (request, response, next) {
   Promise.resolve()
     .then(async function () {
       const paymentGetResponse = await client.paymentInitiationPaymentGet({
@@ -471,25 +494,28 @@ app.get('/api/payment', function (request, response, next) {
 });
 
 //TO-DO: This endpoint will be deprecated in the near future
-app.get('/api/income/verification/paystubs', function (request, response, next) {
-  Promise.resolve()
-  .then(async function () {
-    const paystubsGetResponse = await client.incomeVerificationPaystubsGet({
-      access_token: ACCESS_TOKEN
-    });
-    prettyPrintResponse(paystubsGetResponse);
-    response.json({ error: null, paystubs: paystubsGetResponse.data})
-  })
-  .catch(next);
-})
+app.get(
+  "/api/income/verification/paystubs",
+  function (request, response, next) {
+    Promise.resolve()
+      .then(async function () {
+        const paystubsGetResponse = await client.incomeVerificationPaystubsGet({
+          access_token: ACCESS_TOKEN,
+        });
+        prettyPrintResponse(paystubsGetResponse);
+        response.json({ error: null, paystubs: paystubsGetResponse.data });
+      })
+      .catch(next);
+  }
+);
 
-app.use('/api', function (error, request, response, next) {
+app.use("/api", function (error, request, response, next) {
   prettyPrintResponse(error.response);
   response.json(formatError(error.response));
 });
 
 const server = app.listen(APP_PORT, function () {
-  console.log('plaid-quickstart server listening on port ' + APP_PORT);
+  console.log("plaid-quickstart server listening on port " + APP_PORT);
 });
 
 const prettyPrintResponse = (response) => {
@@ -505,7 +531,7 @@ const getAssetReportWithRetries = (
   plaidClient,
   asset_report_token,
   ms = 1000,
-  retriesLeft = 20,
+  retriesLeft = 20
 ) =>
   new Promise((resolve, reject) => {
     const request = {
@@ -518,14 +544,14 @@ const getAssetReportWithRetries = (
       .catch(() => {
         setTimeout(() => {
           if (retriesLeft === 1) {
-            reject('Ran out of retries while polling for asset report');
+            reject("Ran out of retries while polling for asset report");
             return;
           }
           getAssetReportWithRetries(
             plaidClient,
             asset_report_token,
             ms,
-            retriesLeft - 1,
+            retriesLeft - 1
           ).then(resolve);
         }, ms);
       });
@@ -554,19 +580,19 @@ const authorizeAndCreateTransfer = async (accessToken) => {
     await client.transferAuthorizationCreate({
       access_token: accessToken,
       account_id: accountId,
-      type: 'credit',
-      network: 'ach',
-      amount: '1.34',
-      ach_class: 'ppd',
+      type: "credit",
+      network: "ach",
+      amount: "1.34",
+      ach_class: "ppd",
       user: {
-        legal_name: 'FirstName LastName',
-        email_address: 'foobar@email.com',
+        legal_name: "FirstName LastName",
+        email_address: "foobar@email.com",
         address: {
-          street: '123 Main St.',
-          city: 'San Francisco',
-          region: 'CA',
-          postal_code: '94053',
-          country: 'US',
+          street: "123 Main St.",
+          city: "San Francisco",
+          region: "CA",
+          postal_code: "94053",
+          country: "US",
         },
       },
     });
@@ -574,24 +600,24 @@ const authorizeAndCreateTransfer = async (accessToken) => {
   const authorizationId = transferAuthorizationResponse.data.authorization.id;
 
   const transferResponse = await client.transferCreate({
-    idempotency_key: '1223abc456xyz7890001',
+    idempotency_key: "1223abc456xyz7890001",
     access_token: accessToken,
     account_id: accountId,
     authorization_id: authorizationId,
-    type: 'credit',
-    network: 'ach',
-    amount: '12.34',
-    description: 'Payment',
-    ach_class: 'ppd',
+    type: "credit",
+    network: "ach",
+    amount: "12.34",
+    description: "Payment",
+    ach_class: "ppd",
     user: {
-      legal_name: 'FirstName LastName',
-      email_address: 'foobar@email.com',
+      legal_name: "FirstName LastName",
+      email_address: "foobar@email.com",
       address: {
-        street: '123 Main St.',
-        city: 'San Francisco',
-        region: 'CA',
-        postal_code: '94053',
-        country: 'US',
+        street: "123 Main St.",
+        city: "San Francisco",
+        region: "CA",
+        postal_code: "94053",
+        country: "US",
       },
     },
   });

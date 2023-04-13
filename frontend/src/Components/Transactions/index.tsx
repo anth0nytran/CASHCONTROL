@@ -1,47 +1,60 @@
 import React, { useState, useEffect } from "react";
-import Button from "plaid-threads/Button";
-import Note from "plaid-threads/Note";
+import { Table } from "../Table";
+import { Data, Categories } from "../../interfaces";
 
-import Table from "../Table";
-import Error from "../Error";
-import { DataItem, Categories, ErrorDataItem, Data } from "../../dataUtilities";
+interface Props {
+  token?: string | null;
+  categories?: Categories[];
+  transformData?: (data: any[]) => Data[];
+}
 
-import styles from "./index.module.scss";
-
-interface Props {}
-
-const Transactions = (props: Props) => {
+export const Transactions: React.FC<Props> = (props) => {
+  const [data, setData] = useState<Data[]>([]);
+  const [transformedData, setTransformedData] = useState<Data[]>([]);
   const [showTable, setShowTable] = useState(false);
-  const [data, setData] = useState([]);
-  const [transformedData, setTransformedData] = useState<Data>([]);
-  const [pdf, setPdf] = useState<string | null>(null);
-  const [error, setError] = useState<ErrorDataItem | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const getData = async () => {
-    setIsLoading(true);
-    const response = await fetch(`/api/transactions/sync`, { method: "GET" });
-    const data = await response.json();
-    setData(data);
-    if (data.error != null) {
-      setError(data.error);
-      setIsLoading(false);
-      return;
-    }
-    if (data.pdf != null) {
-      setPdf(data.pdf);
-    }
-    setShowTable(true);
-    setIsLoading(false);
-  };
 
   useEffect(() => {
-    getData();
-  }, []);
+    const getData = async () => {
+      const response = await fetch("/api/transactions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token: props.token,
+        }),
+      });
 
-  return <p>{JSON.stringify(data)}</p>;
+      if (response.ok) {
+        const data = await response.json();
+        setData(data.response);
+        setTransformedData(
+          props.transformData
+            ? props.transformData(data.response)
+            : data.response
+        );
+      }
+    };
+
+    if (props.token) {
+      getData();
+    }
+  }, [props.token, props.transformData]);
+
+  return (
+    <div>
+      <h3>Transactions</h3>
+      {showTable && (
+        <Table
+          categories={props.categories || []}
+          data={transformedData}
+          isIdentity={false}
+          isTransactions
+        />
+      )}
+      <button onClick={() => setShowTable(!showTable)}>
+        {showTable ? "Hide" : "Show"} Table
+      </button>
+    </div>
+  );
 };
-
-Transactions.displayName = "Transactions";
-
-export default Transactions;
