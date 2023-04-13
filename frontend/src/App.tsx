@@ -8,7 +8,8 @@ import Context from "./Context";
 import styles from "./App.module.scss";
 
 const App = () => {
-  const { linkSuccess, isItemAccess, isPaymentInitiation, dispatch } = useContext(Context);
+  const { linkSuccess, isItemAccess, isPaymentInitiation, dispatch } =
+    useContext(Context);
 
   const getInfo = useCallback(async () => {
     const response = await fetch("/api/info", { method: "POST" });
@@ -17,9 +18,8 @@ const App = () => {
       return { paymentInitiation: false };
     }
     const data = await response.json();
-    const paymentInitiation: boolean = data.products.includes(
-      "payment_initiation"
-    );
+    const paymentInitiation: boolean =
+      data.products.includes("payment_initiation");
     dispatch({
       type: "SET_STATE",
       state: {
@@ -88,13 +88,10 @@ const App = () => {
         <Header />
         {linkSuccess && (
           <>
-            {isPaymentInitiation && (
-              <Products />
-            )}
+            {isPaymentInitiation && <Products />}
             {isItemAccess && (
               <>
                 <Products />
-                <Items />
               </>
             )}
           </>

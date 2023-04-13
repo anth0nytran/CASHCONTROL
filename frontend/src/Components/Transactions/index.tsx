@@ -16,18 +16,15 @@ export const Transactions: React.FC<Props> = (props) => {
   useEffect(() => {
     const getData = async () => {
       const response = await fetch("/api/transactions", {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          token: props.token,
-        }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        setData(data.response);
+        setData(data.latest_transactions);
         setTransformedData(
           props.transformData
             ? props.transformData(data.response)
@@ -43,18 +40,10 @@ export const Transactions: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <h3>Transactions</h3>
-      {showTable && (
-        <Table
-          categories={props.categories || []}
-          data={transformedData}
-          isIdentity={false}
-          isTransactions
-        />
-      )}
-      <button onClick={() => setShowTable(!showTable)}>
-        {showTable ? "Hide" : "Show"} Table
-      </button>
+      <h3>Transaction History</h3>
+      {data.map((item) => {
+        return <div>{JSON.stringify(item)}</div>;
+      })}
     </div>
   );
 };

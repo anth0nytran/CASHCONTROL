@@ -26,10 +26,11 @@ import {
   transformTransferData,
   transformIncomePaystubsData,
 } from "../../dataUtilities";
+import { access } from "fs";
 
 const Products = () => {
-  const { products } = useContext(Context);
-  return <Transactions />;
+  const { products, accessToken } = useContext(Context);
+  return <Transactions token={accessToken} />;
 };
 
 Products.displayName = "Products";

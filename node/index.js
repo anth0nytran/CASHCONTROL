@@ -103,7 +103,7 @@ app.post("/api/create_link_token", function (request, response, next) {
           // This should correspond to a unique id for the current user.
           client_user_id: "user-id",
         },
-        client_name: "CashControl",
+        client_name: "Plaid Quickstart",
         products: PLAID_PRODUCTS,
         country_codes: PLAID_COUNTRY_CODES,
         language: "en",
@@ -164,7 +164,7 @@ app.post(
         PAYMENT_ID = paymentId;
 
         const configs = {
-          client_name: "CashControl",
+          client_name: "Plaid Quickstart",
           user: {
             // This should correspond to a unique id for the current user.
             // Typically, this will be a user ID number from your application.
@@ -233,61 +233,46 @@ app.get("/api/auth", function (request, response, next) {
 
 // Retrieve Transactions for an Item
 // https://plaid.com/docs/#transactions
-app.get("/api/transactions", async (req, res) => {
-  // Get start_date and end_date from the request query parameters
-  const { start_date, end_date } = req.query;
+app.get("/api/transactions", function (request, response, next) {
+  Promise.resolve()
+    .then(async function () {
+      // Set cursor to empty to receive all historical updates
+      let cursor = null;
 
-  try {
-    // Retrieve transactions from Plaid
-    const response = await client.transactions.get(
-      ACCESS_TOKEN,
-      start_date,
-      end_date
-    );
+      // New transaction updates since "cursor"
+      let added = [];
+      let modified = [];
+      // Removed transaction ids
+      let removed = [];
+      let hasMore = true;
+      // Iterate through each page of new transaction updates for item
+      while (hasMore) {
+        const request = {
+          access_token: ACCESS_TOKEN,
+          cursor: cursor,
+        };
+        const response = await client.transactionsSync(request);
+        const data = response.data;
+        // Add this page of results
+        added = added.concat(data.added);
+        modified = modified.concat(data.modified);
+        removed = removed.concat(data.removed);
+        hasMore = data.has_more;
+        // Update cursor to the next cursor
+        cursor = data.next_cursor;
+        prettyPrintResponse(response);
+      }
 
-    res.json(response.transactions);
-  } catch (error) {
-    console.error(`Error fetching transactions: ${error}`);
-    res.sendStatus(500);
-  }
+      const compareTxnsByDateAscending = (a, b) =>
+        (a.date > b.date) - (a.date < b.date);
+      // Return the 8 most recent transactions
+      const recently_added = [...added]
+        .sort(compareTxnsByDateAscending)
+        .slice(-8);
+      response.json({ latest_transactions: recently_added });
+    })
+    .catch(next);
 });
-// app.get('/api/transactions', function (request, response, next) {
-//   Promise.resolve()
-//     .then(async function () {
-//       // Set cursor to empty to receive all historical updates
-//       let cursor = null;
-
-//       // New transaction updates since "cursor"
-//       let added = [];
-//       let modified = [];
-//       // Removed transaction ids
-//       let removed = [];
-//       let hasMore = true;
-//       // Iterate through each page of new transaction updates for item
-//       while (hasMore) {
-//         const request = {
-//           access_token: ACCESS_TOKEN,
-//           cursor: cursor,
-//         };
-//         const response = await client.transactionsSync(request)
-//         const data = response.data;
-//         // Add this page of results
-//         added = added.concat(data.added);
-//         modified = modified.concat(data.modified);
-//         removed = removed.concat(data.removed);
-//         hasMore = data.has_more;
-//         // Update cursor to the next cursor
-//         cursor = data.next_cursor;
-//         prettyPrintResponse(response);
-//       }
-
-//       const compareTxnsByDateAscending = (a, b) => (a.date > b.date) - (a.date < b.date);
-//       // Return the 8 most recent transactions
-//       const recently_added = [...added].sort(compareTxnsByDateAscending).slice(-8);
-//       response.json({latest_transactions: recently_added});
-//     })
-//     .catch(next);
-// });
 
 // Retrieve Investment Transactions for an Item
 // https://plaid.com/docs/#investments
