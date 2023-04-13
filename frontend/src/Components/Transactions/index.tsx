@@ -3,9 +3,9 @@ import { Table } from "../Table";
 import { Data, Categories } from "../../interfaces";
 
 interface Props {
-  token: string | null;
-  categories: Categories[];
-  transformData: (data: any[]) => Data[];
+  token?: string | null;
+  categories?: Categories[];
+  transformData?: (data: any[]) => Data[];
 }
 
 export const Transactions: React.FC<Props> = (props) => {
@@ -28,7 +28,11 @@ export const Transactions: React.FC<Props> = (props) => {
       if (response.ok) {
         const data = await response.json();
         setData(data.response);
-        setTransformedData(props.transformData(data.response));
+        setTransformedData(
+          props.transformData
+            ? props.transformData(data.response)
+            : data.response
+        );
       }
     };
 
@@ -42,7 +46,7 @@ export const Transactions: React.FC<Props> = (props) => {
       <h3>Transactions</h3>
       {showTable && (
         <Table
-          categories={props.categories}
+          categories={props.categories || []}
           data={transformedData}
           isIdentity={false}
           isTransactions

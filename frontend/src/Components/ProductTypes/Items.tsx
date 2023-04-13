@@ -7,11 +7,12 @@ const itemsEndpoint = "/items/get";
 
 const Items: React.FC = () => {
   return (
-    <ProductTypesContainer title="Items">
+    <ProductTypesContainer productType="Items">
       <Endpoint
+        token={null}
         endpoint={itemsEndpoint}
-        transformData={transformItemData}
-        categories={itemCategories}
+        transformData={transformItemData as any}
+        categories={itemCategories as any}
       />
     </ProductTypesContainer>
   );
