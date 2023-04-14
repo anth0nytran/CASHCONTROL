@@ -24,7 +24,7 @@ const PLAID_ENV = process.env.PLAID_ENV || "sandbox";
 // Link. Note that this list must contain 'assets' in order for the app to be
 // able to create and retrieve asset reports.
 const PLAID_PRODUCTS = (
-  process.env.PLAID_PRODUCTS || Products.Transactions
+  process.env.PLAID_PRODUCTS || Products.Transactions + ',' + Products.TransactionsRecurring
 ).split(",");
 
 // PLAID_COUNTRY_CODES is a comma-separated list of countries for which users
@@ -230,6 +230,30 @@ app.get("/api/auth", function (request, response, next) {
     })
     .catch(next);
 });
+
+// Retrieve recurring transactions for an Item
+// https://plaid.com/docs/api/products/transactions/#transactionsrecurringget
+app.get("/api/recurring_transactions", function (request, response, next) {
+  Promise.resolve()
+    .then(async function () {
+      const startDate = moment().subtract(2, "years").format("YYYY-MM-DD");
+      const endDate = moment().format("YYYY-MM-DD");
+      const configs = {
+        access_token: ACCESS_TOKEN,
+        start_date: startDate,
+        end_date: endDate,
+      };
+      const recurringTransactionsResponse = await client.transactionsRecurringGet(configs);
+      prettyPrintResponse(recurringTransactionsResponse);
+      response.json({
+        error: null,
+        recurring_transactions: recurringTransactionsResponse.data.transactions,
+      });
+    })
+    .catch(next);
+});
+
+
 
 // Retrieve Transactions for an Item
 // https://plaid.com/docs/#transactions
