@@ -10,6 +10,7 @@ interface Props {
   transformData?: (data: any[]) => Data[];
 }
 
+
 export const Transactions: React.FC<Props> = (props) => {
   const [data, setData] = useState<Transaction[]>([]);
   const [transformedData, setTransformedData] = useState<Data[]>([]);
@@ -40,7 +41,7 @@ export const Transactions: React.FC<Props> = (props) => {
     }
   }, [props.token, props.transformData]);
 
-// terms and agreements + name
+//  start of terms and agreements + name
 
   const [nameInput, setNameInput] = useState('');
 
@@ -53,11 +54,6 @@ export const Transactions: React.FC<Props> = (props) => {
   } = useContext(Context);
 
   const handleAcceptTermsConditions = () => {
-    dispatch({ type: "SET_STATE", state: { acceptedTermsConditions: true } });
-    const name = "Steve Jobs"
-    if (name) {
-      dispatch({ type: "SET_STATE", state: { userName: name } });
-    }
   };
 
   const handleNameInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,12 +61,42 @@ export const Transactions: React.FC<Props> = (props) => {
   };
   
   const handleSetName = () => {
-    if (nameInput) {
-      dispatch({ type: 'SET_STATE', state: { userName: nameInput } });
+    if (nameInput && !acceptedTermsConditions) {
+      dispatch({ type: 'SET_STATE', state: { userName: nameInput, acceptedTermsConditions: true } });
       setNameInput('');
     }
   };
 //end of terms and agreements + name
+
+// Start of account balance:
+const [accountBalance, setAccountBalance] = useState<number | null>(null);
+
+useEffect(() => {
+  const fetchAccountBalance = async () => {
+    const response = await fetch('/api/balance', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+
+    if (response.ok) {
+      const balanceData = await response.json();
+      const fetchedAccountBalance = balanceData.accounts[0].balances.current;
+      setAccountBalance(fetchedAccountBalance);
+    } else {
+      console.error('Failed to fetch account balance.');
+    }
+  };
+
+  if (accessToken) {
+    fetchAccountBalance();
+  }
+}, [accessToken]);
+// End of account balance
+
+
     return (
       //start of terms and agreements + name
       <div>
@@ -106,8 +132,10 @@ export const Transactions: React.FC<Props> = (props) => {
         } 
         <h3>
           {userName ? `Hi, ${userName}!` : "Hi!"}
-        </h3> 
-      
+        </h3>
+        <p>
+          Account Balance: ${accountBalance ? accountBalance.toFixed(2) : "Loading..."} 
+        </p>
        <h2>Transaction History:</h2> 
       <div className={styles.container}> 
         {data.map((item: Transaction, index: number) => ( // start of transaction history
