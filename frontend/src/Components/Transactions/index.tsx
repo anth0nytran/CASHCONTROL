@@ -96,91 +96,105 @@ useEffect(() => {
 }, [accessToken]);
 // End of account balance
 
+//recurring transactions
+const [recurringTransactions, setRecurringTransactions] = useState([]);
 
-    return (
-      //start of terms and agreements + name
-      <div>
-        {
-          accessToken && !acceptedTermsConditions && (
-            <div className={styles.termsConditionsOverlay}>
-              <div className={styles.termsConditionsContent}>
-                <h1>Hello, welcome to Cash Control</h1>
-                <p>
-                  {/* Add your Terms and Conditions text here */}
-                  <label>
-                    <input
-                      type="checkbox"
-                      onChange={handleAcceptTermsConditions} //NEED TO FIX THIS DOES A PROMPT
-                    />
-                    I accept the Terms and Conditions
-                  </label>
-                </p>
-                {!userName && (
-                  <div>
-                    <p>Hello, what is your name?</p>
-                    <input
-                      type="text"
-                      value={nameInput}
-                      onChange={handleNameInputChange}
-                    />
-                    <button onClick={handleSetName}>Submit</button>
-                  </div>
-                )}
-              </div>
+useEffect(() => {
+  const fetchRecurringTransactions = async () => {
+    const response = await fetch('/api/recurring-transactions', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      setRecurringTransactions(data.recurring_transactions);
+    } else {
+      console.error('Failed to fetch recurring transactions.');
+    }
+  };
+
+  if (accessToken) {
+    fetchRecurringTransactions();
+  }
+}, [accessToken]);
+
+//end of recurring transactions
+
+return (
+  //start of terms and agreements + name
+  <div>
+    {accessToken && !acceptedTermsConditions && (
+      <div className={styles.termsConditionsOverlay}>
+        <div className={styles.termsConditionsContent}>
+          <h1>Hello, welcome to Cash Control</h1>
+          <p>
+            {/* Add your Terms and Conditions text here */}
+            <label>
+              <input
+                type="checkbox"
+                onChange={handleAcceptTermsConditions} //NEED TO FIX THIS DOES A PROMPT
+              />
+              I accept the Terms and Conditions
+            </label>
+          </p>
+          {!userName && (
+            <div>
+              <p>Hello, what is your name?</p>
+              <input
+                type="text"
+                value={nameInput}
+                onChange={handleNameInputChange}
+              />
+              <button onClick={handleSetName}>Submit</button>
             </div>
-          )    //end of terms and agreements + name
-        } 
-        <h3>
-          {userName ? `Hi, ${userName}!` : "Hi!"}
-        </h3>
-        <p>
-          Account Balance: ${accountBalance ? accountBalance.toFixed(2) : "Loading..."} 
-        </p>
-       <h2>Transaction History:</h2> 
-      <div className={styles.container}> 
-        {data.map((item: Transaction, index: number) => ( // start of transaction history
-          <div key={index} className={styles.transactionCard}>
-            <p>
-              <strong>Date:</strong> {item.date}
-            </p>
-            <p>
-              <strong>Name:</strong> {item.name}
-            </p>
-            <p>
-              <strong>Amount:</strong> ${item.amount.toFixed(2)}
-            </p>
-            <p>
-              <strong>Category:</strong> {item.category.join(', ')}
-            </p>
-          </div>
-        ))}
+          )}
+        </div>
       </div>
-    </div> //end of transaction history
-  );
-};
-      {/* <div>
-      <h3>Transaction History</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Name</th>
-            <th>Amount</th>
-            <th>Category</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item, index) => (
-            <tr key={index}>
-              <td>{item.date}</td>
-              <td>{item.name}</td>
-              <td>${item.amount.toFixed(2)}</td>
-              <td>{item.category.join(', ')}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div> */}
-//     </div>
-//   );
-// };
+    ) //end of terms and agreements + name
+    }
+    <h3>{userName ? `Hi, ${userName}!` : "Hi!"}</h3>
+    <p>
+      Account Balance: ${accountBalance ? accountBalance.toFixed(2) : "Loading..."}
+    </p>
+    <h2>Transaction History:</h2>
+    <div className={styles.container}>
+      <div className={styles.headers}>
+        <strong>Date</strong>
+        <strong>Name</strong>
+        <strong>Amount</strong>
+        <strong>Category</strong>
+      </div>
+      {data.map((item: Transaction, index: number) => (
+        <div key={index} className={styles.transactionCard}>
+          <p>{item.date}</p>
+          <p>{item.name}</p>
+          <p>${item.amount.toFixed(2)}</p>
+          <p>{item.category.join(", ")}</p>
+        </div>
+      ))}
+    </div>
+
+    <h2>Recurring Transactions:</h2>
+    <div className={styles.container}>
+      <div className={styles.headers}>
+        <strong>Date</strong>
+        <strong>Name</strong>
+        <strong>Amount</strong>
+        <strong>Category</strong>
+      </div>
+      {recurringTransactions.map((item: Transaction, index: number) => (
+        <div key={index} className={styles.transactionCard}>
+          <p>{item.date}</p>
+          <p>{item.name}</p>
+          <p>${item.amount.toFixed(2)}</p>
+          <p>{item.category.join(", ")}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+      }
