@@ -10,7 +10,7 @@ import styles from "./App.module.scss";
 const App = () => {
   const { linkSuccess, isItemAccess, isPaymentInitiation, dispatch } =
     useContext(Context);
-
+    
   const getInfo = useCallback(async () => {
     const response = await fetch("/api/info", { method: "POST" });
     if (!response.ok) {

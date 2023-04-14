@@ -9,7 +9,14 @@ interface QuickstartState {
   itemId: string | null;
   isError: boolean;
   backend: boolean;
-  products: string[];
+  
+  //username:
+  showTermsConditions: boolean;
+  acceptedTermsConditions: boolean;
+  userName: string | null;
+
+
+  products: string[],
   linkTokenError: {
     error_message: string;
     error_code: string;
@@ -26,6 +33,12 @@ const initialState: QuickstartState = {
   itemId: null,
   isError: false,
   backend: true,
+
+  //USERNAME
+  showTermsConditions: false,
+  acceptedTermsConditions: false,
+  userName: null,
+
   products: ["transactions"],
   linkTokenError: {
     error_type: "",
