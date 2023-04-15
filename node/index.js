@@ -233,7 +233,7 @@ app.get("/api/auth", function (request, response, next) {
 
 // Retrieve recurring transactions for an Item
 // https://plaid.com/docs/api/products/transactions/#transactionsrecurringget
-app.get("/api/recurring_transactions", function (request, response, next) {
+app.get("/api/transactions/recurring/get", function (request, response, next) {
   Promise.resolve()
     .then(async function () {
       const startDate = moment().subtract(2, "years").format("YYYY-MM-DD");
