@@ -96,33 +96,89 @@ useEffect(() => {
 }, [accessToken]);
 // End of account balance
 
-//recurring transactions
-const [recurringTransactions, setRecurringTransactions] = useState([]);
+//investment information
+// const [investmentTransactions, setInvestmentTransactions] = useState([]);
 
-useEffect(() => {
-  const fetchRecurringTransactions = async () => {
-    const response = await fetch('/api/recurring-transactions', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-      },
-    });
+// useEffect(() => {
+//   const fetchInvestmentTransactions = async () => {
+//     const response = await fetch("/api/investments_transactions", {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     });
 
-    if (response.ok) {
-      const data = await response.json();
-      setRecurringTransactions(data.recurring_transactions);
-    } else {
-      console.error('Failed to fetch recurring transactions.');
-    }
-  };
+//     if (response.ok) {
+//       const data = await response.json();
+//       setInvestmentTransactions(data.investments_transactions);
+//     }
+//   };
 
-  if (accessToken) {
-    fetchRecurringTransactions();
-  }
-}, [accessToken]);
+//   if (props.token) {
+//     fetchInvestmentTransactions();
+//   }
+// }, [props.token]);
 
-//end of recurring transactions
+//end of investment information
+
+
+
+// //recurring transactions
+// const [recurringTransactions, setRecurringTransactions] = useState([]);
+
+// useEffect(() => {
+//   const fetchRecurringTransactions = async () => {
+//     const response = await fetch('/api/recurring-transactions', {
+//       method: 'GET',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Authorization': `Bearer ${accessToken}`,
+//       },
+//     });
+
+//     if (response.ok) {
+//       const data = await response.json();
+//       setRecurringTransactions(data.recurring_transactions);
+//     } else {
+//       console.error('Failed to fetch recurring transactions.');
+//     }
+//   };
+
+//   if (accessToken) {
+//     fetchRecurringTransactions();
+//   }
+// }, [accessToken]);
+
+// //end of recurring transactions
+
+
+// //asset report
+// // Create a separate async function to fetch asset data
+// const [assetReportFetched, setAssetReportFetched] = useState(false);
+
+// const fetchAssetReport = async () => {
+//   try {
+//     const response = await fetch("/api/assets", {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//         "Authorization": `Bearer ${accessToken}`,
+//       },
+//     });
+
+//     // Handle the response here
+//     setAssetReportFetched(true);
+//   } catch (error) {
+//     console.error("Failed to fetch asset data:", error);
+//   }
+// };
+
+// useEffect(() => {
+//   if (accessToken && !assetReportFetched) {
+//     fetchAssetReport();
+//   }
+// }, [accessToken, assetReportFetched]);
+// // end of asset report
 
 return (
   //start of terms and agreements + name
@@ -178,7 +234,31 @@ return (
       ))}
     </div>
 
-    <h2>Recurring Transactions:</h2>
+
+
+    {/* <h2>Investment Transactions:</h2> 
+      <div className={styles.investmentContainer}>
+      <div className={styles.headers}>
+        <strong>Date</strong>
+        <strong>Name</strong>
+        <strong>Amount</strong>
+        <strong>Category</strong>
+  </div>
+  {investmentTransactions.length > 0 &&
+  investmentTransactions.map((item: Transaction, index: number) => (
+    <div key={index} className={styles.investmentCard}>
+      <p>{item.date}</p>
+      <p>{item.name}</p>
+      <p>${item.amount.toFixed(2)}</p>
+      <p>{item.category.join(", ")}</p>
+    </div>
+  ))}
+</div> */}
+
+
+    {/* <button onClick={fetchAssetReport}>Get Asset Report</button> */}
+
+    {/* <h2>Recurring Transactions:</h2>
     <div className={styles.container}>
       <div className={styles.headers}>
         <strong>Date</strong>
@@ -194,7 +274,7 @@ return (
           <p>{item.category.join(", ")}</p>
         </div>
       ))}
-    </div>
+    </div> */}
   </div>
 );
       }
