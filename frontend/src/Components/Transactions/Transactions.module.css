@@ -104,3 +104,16 @@
 .termsConditionsContent button:hover {
   background-color: #0056b3;
 }
+
+.investmentContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.investmentCard {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 1rem;
+  background-color: #f5f5f5;
+}
