@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Table } from "../Table";
-import { Data, Transaction, Categories } from '../../interfaces';
+import { Data, Transaction, Categories, RecurringTransaction } from '../../interfaces';
 import styles from './Transactions.module.css';
 import Context from "../../Context";
 
@@ -70,6 +70,7 @@ export const Transactions: React.FC<Props> = (props) => {
 
 // Start of account balance:
 const [accountBalance, setAccountBalance] = useState<number | null>(null);
+const [accounts, setAccounts] = useState<any>([]);
 
 useEffect(() => {
   const fetchAccountBalance = async () => {
@@ -85,6 +86,7 @@ useEffect(() => {
       const balanceData = await response.json();
       const fetchedAccountBalance = balanceData.accounts[0].balances.current;
       setAccountBalance(fetchedAccountBalance);
+      setAccounts(balanceData.accounts);
     } else {
       console.error('Failed to fetch account balance.');
     }
@@ -122,34 +124,79 @@ useEffect(() => {
 //end of investment information
 
 
-
-//recurring transactions
-const [recurringTransactions, setRecurringTransactions] = useState([]);
-
+//total spending in 30 days
+const [totalSpending, setTotalSpending] = useState<number>(0);
 useEffect(() => {
-  const fetchRecurringTransactions = async () => {
-    const response = await fetch('/api/transactions/recurring', {
-      method: 'GET',
+  const getData = async () => {
+    const response = await fetch("/api/transactions", {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
       },
     });
 
     if (response.ok) {
       const data = await response.json();
-      setRecurringTransactions(data.recurring_transactions);
-    } else {
-      console.error('Failed to fetch recurring transactions.');
+      setData(data.latest_transactions);
+      setTransformedData(
+        props.transformData ? props.transformData(data.response) : data.response
+      );
+
+      // Calculate total spending
+      const spending = data.latest_transactions.reduce(
+        (acc: number, transaction: Transaction) =>
+          acc + (transaction.amount > 0 ? transaction.amount : 0),
+        0
+      );
+      setTotalSpending(spending);
     }
   };
 
-  if (accessToken) {
-    fetchRecurringTransactions();
+  if (props.token) {
+    getData();
   }
-}, [accessToken]);
+}, [props.token, props.transformData]);
+//end of total spending of 30 days
 
-//end of recurring transactions
+
+//recurring transactions
+// State for recurring transactions
+const [recurringTransactions, setRecurringTransactions] = useState([]);
+// const accountId = accounts.length ? accounts[0].account_id:''
+
+type Account={
+  account_id: string
+}
+
+const accountIds = accounts.map((account:Account) => account.account_id).join(',');
+
+// Fetch recurring transactions
+const fetchRecurringTransactions = async (accountsIds: string) => {
+  const response = await fetch(`/api/transactions/recurring?account_ids=${accountIds}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
+    },
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    setRecurringTransactions(data.recurring_transactions);
+  } else {
+    console.error('Failed to fetch recurring transactions.');
+  }
+};
+
+// UseEffect for fetching recurring transactions when access token and account_id are available
+useEffect(() => {
+  if (accessToken && accountIds) {
+    fetchRecurringTransactions(accountIds);
+  }
+}, [accessToken, accountIds]);
+
+
+// end of recurring transactions
 
 
 // //asset report
@@ -179,6 +226,78 @@ useEffect(() => {
 //   }
 // }, [accessToken, assetReportFetched]);
 // // end of asset report
+
+
+// notifications:
+// notification bell
+const [notificationsVisible, setNotificationsVisible] = useState(false);
+
+//end of notification bell
+interface NotificationProps {
+  type: 'new' | 'modified' | 'removed';
+  message: string;
+}
+
+const Notification: React.FC<NotificationProps> = ({ type, message }) => {
+  return (
+    <div className={styles.notification}>
+      <p>{message}</p>
+    </div>
+  );
+};
+
+interface NotificationData {
+  type: 'new' | 'modified' | 'removed';
+  message: string;
+}
+
+const [notifications, setNotifications] = useState<NotificationData[]>([]);
+
+useEffect(() => {
+  const fetchTransactionsUpdates = async () => {
+    const response = await fetch('/api/transactions', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const transactionUpdates = data.transactionUpdates;
+      console.log('Transaction updates:', transactionUpdates);
+      const newNotifications = [
+        ...transactionUpdates.added.map((txn: any) => ({
+          type: 'new',
+          message: `New transaction: ${txn.name} - ${txn.amount}`,
+        })),
+        ...transactionUpdates.modified.map((txn: any) => ({
+          type: 'modified',
+          message: `Modified transaction: ${txn.name} - ${txn.amount}`,
+        })),
+        ...transactionUpdates.removed.map((txnId: any) => ({
+          type: 'removed',
+          message: `Removed transaction with ID: ${txnId}`,
+        })),
+      ];
+
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        ...newNotifications,
+      ]);
+    } else {
+      console.error('Failed to fetch transaction updates.');
+    }
+  };
+
+  if (accessToken) {
+    const intervalId = setInterval(fetchTransactionsUpdates, 30000); // Poll every 30 seconds
+    return () => clearInterval(intervalId);
+  }
+}, [accessToken]);
+// end of notifications
+
 
 return (
   //start of terms and agreements + name
@@ -213,6 +332,21 @@ return (
     ) //end of terms and agreements + name
     }
     <h3>{userName ? `Hi, ${userName}!` : "Hi!"}</h3>
+    <h4>Notifications</h4>
+
+    <div className={styles.bellIcon} onClick={() => setNotificationsVisible(!notificationsVisible)}>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <path d="M12 2C9.243 2 7 4.243 7 7v5.586l-.707.707A.996.996 0 006 14v2c0 .552.448 1 1 1h9c.552 0 1-.448 1-1v-2c0-.379-.214-.725-.553-.895l-.004-.002-.006-.003-.01-.005-.018-.01a.955.955 0 00-.31-.182l-.023-.012a1.02 1.02 0 00-.07-.037l-.024-.012-.007-.003-.002-.001-.707-.293V7c0-2.757-2.243-5-5-5zm0 21c-1.654 0-3-1.346-3-3h6c0 1.654-1.346 3-3 3z"/>
+</svg>
+{notificationsVisible && (
+  <div className={styles.notificationList}>
+    {notifications.map((notification, index) => (
+      <Notification key={index} type={notification.type} message={notification.message} />
+    ))}
+  </div>
+)}
+    </div>
+    <p>Total spending in the last 30 days: ${totalSpending.toFixed(2)}</p>
     <p>
       Account Balance: ${accountBalance ? accountBalance.toFixed(2) : "Loading..."}
     </p>
@@ -258,20 +392,20 @@ return (
 
     {/* <button onClick={fetchAssetReport}>Get Asset Report</button> */}
 
-    <h2>Recurring Transactions:</h2>
+    <h2>Bills:</h2>
     <div className={styles.container}>
       <div className={styles.headers}>
         <strong>Date</strong>
-        <strong>Name</strong>
+        <strong>Description</strong>
         <strong>Amount</strong>
-        <strong>Category</strong>
+        <strong>Frequency</strong>
       </div>
-      {recurringTransactions.map((item: Transaction, index: number) => (
+      {recurringTransactions.map((item: RecurringTransaction, index: number) => (
         <div key={index} className={styles.transactionCard}>
-          <p>{item.date}</p>
-          <p>{item.name}</p>
-          <p>${item.amount.toFixed(2)}</p>
-          <p>{item.category.join(", ")}</p>
+          <p>{item.last_date}</p>
+          <p>{item.description}</p>
+          <p>${item.average_amount.amount.toFixed(2)}</p>
+          <p>{item.frequency}</p>
         </div>
       ))}
     </div>

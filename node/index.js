@@ -236,24 +236,24 @@ app.get("/api/auth", function (request, response, next) {
 app.get("/api/transactions/recurring", function (request, response, next) {
   Promise.resolve()
     .then(async function () {
-      const startDate = moment().subtract(2, "years").format("YYYY-MM-DD");
-      const endDate = moment().format("YYYY-MM-DD");
+      const accountIds = request.query.account_ids ? request.query.account_ids.split(',') : [];
+      const firstDate = moment().subtract(2, "years").format("YYYY-MM-DD");
+      const lastDate = moment().format("YYYY-MM-DD");
       const configs = {
         access_token: ACCESS_TOKEN,
-        first_date: firstDate,
-        last_date: lastDate,
+        // first_date: firstDate,
+        // last_date: lastDate,
+        account_ids: accountIds.length > 0 ? accountIds : undefined,
       };
       const recurringTransactionsResponse = await client.transactionsRecurringGet(configs);
       prettyPrintResponse(recurringTransactionsResponse);
       response.json({
         error: null,
-        recurring_transactions: recurringTransactionsResponse.data.transactions,
+        recurring_transactions: recurringTransactionsResponse.data.outflow_streams,
       });
     })
     .catch(next);
 });
-
-
 
 // Retrieve Transactions for an Item
 // https://plaid.com/docs/#transactions
@@ -290,10 +290,16 @@ app.get("/api/transactions", function (request, response, next) {
       const compareTxnsByDateAscending = (a, b) =>
         (a.date > b.date) - (a.date < b.date);
       // Return the 8 most recent transactions
-      const recently_added = [...added]
+      const recently_added = [...added,...modified,...removed]
         .sort(compareTxnsByDateAscending)
         .slice(-8);
-      response.json({ latest_transactions: recently_added });
+      response.json({ 
+        latest_transactions: recently_added,
+        transactionUpdates: {
+          added: added,
+          modified: modified,
+          removed: removed,
+        },});
     })
     .catch(next);
 });

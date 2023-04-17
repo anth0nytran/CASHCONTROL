@@ -7,7 +7,15 @@ export interface Transaction {
   name: string;
   amount: number;
   category: string[];
+  
 }
+export interface RecurringTransaction{
+  last_date: string;
+  description: string;
+  frequency: string;
+  average_amount: {amount: number};
+}
+
 
 export type Data = DataItem[];
 
