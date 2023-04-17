@@ -241,8 +241,8 @@ app.get("/api/transactions/recurring", function (request, response, next) {
       const lastDate = moment().format("YYYY-MM-DD");
       const configs = {
         access_token: ACCESS_TOKEN,
-        start_date: firstDate,
-        end_date: lastDate,
+        // start_date: firstDate,
+        // end_date: lastDate,
         account_ids: accountIds.length > 0 ? accountIds : undefined,
       };
       const recurringTransactionsResponse = await client.transactionsRecurringGet(configs);

@@ -164,7 +164,7 @@
   padding: 1rem;
   background-color: #f5f5f5;
 }
-notification {
+.notification {
   padding: 12px 16px;
   margin: 8px 0;
   border-radius: 4px;
@@ -188,11 +188,24 @@ notification {
 
 .notification p {
   margin: 0;
-  font-weight: 500
-  ;
+  font-weight: 500;
 }
+
 .notification-list {
-  max-height: 300px;
+  max-height: 200px; /* Adjust this value based on the height of your notifications */
   overflow-y: auto;
-  margin-bottom: 16px;
+  position: absolute;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  width: 100%;
+  z-index: 1;
+}
+
+.dropdown {
+  margin-top: 8px;
+}
+
+.notification-list::-webkit-scrollbar {
+  display: none;
 }

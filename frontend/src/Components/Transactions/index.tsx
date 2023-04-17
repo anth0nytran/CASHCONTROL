@@ -228,14 +228,15 @@ useEffect(() => {
 
 //recurring transactions
 // State for recurring transactions
-const [recurringTransactions, setRecurringTransactions] = useState([]);
+const [recurringTransactions, setRecurringTransactions] = useState<RecurringTransaction[] | null>(null);
+
 
 // Collect all account IDs
 const accountIds = accounts ? accounts.map((account: any) => account.account_id).join(',') : '';
 
 // Fetch recurring transactions
 const fetchRecurringTransactions = async (accountIds: any) => {
-  const response = await fetch('/api/transactions/recurring?account_ids=${accountIds}', {
+  const response = await fetch(`/api/transactions/recurring?account_ids=${accountIds}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -259,6 +260,13 @@ useEffect(() => {
 }, [accessToken, accountIds]);
 
 //end of recurring transactions
+
+
+//user profile:
+
+
+
+
 
 return (
   //start of terms and agreements + name
@@ -294,19 +302,20 @@ return (
     }
     <h3>{userName ? `Hi, ${userName}!` : "Hi!"}</h3>
     <h4>Notifications</h4>
-
     <div className={styles.bellIcon} onClick={() => setNotificationsVisible(!notificationsVisible)}>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-  <path d="M12 2C9.243 2 7 4.243 7 7v5.586l-.707.707A.996.996 0 006 14v2c0 .552.448 1 1 1h9c.552 0 1-.448 1-1v-2c0-.379-.214-.725-.553-.895l-.004-.002-.006-.003-.01-.005-.018-.01a.955.955 0 00-.31-.182l-.023-.012a1.02 1.02 0 00-.07-.037l-.024-.012-.007-.003-.002-.001-.707-.293V7c0-2.757-2.243-5-5-5zm0 21c-1.654 0-3-1.346-3-3h6c0 1.654-1.346 3-3 3z"/>
-</svg>
-{notificationsVisible && (
-  <div className={styles.notificationList}>
-    {notifications.map((notification, index) => (
-      <Notification key={index} type={notification.type} message={notification.message} />
-    ))}
-  </div>
-)}
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+    <path d="M12 2C9.243 2 7 4.243 7 7v5.586l-.707.707A.996.996 0 006 14v2c0 .552.448 1 1 1h9c.552 0 1-.448 1-1v-2c0-.379-.214-.725-.553-.895l-.004-.002-.006-.003-.01-.005-.018-.01a.955.955 0 00-.31-.182l-.023-.012a1.02 1.02 0 00-.07-.037l-.024-.012-.007-.003-.002-.001-.707-.293V7c0-2.757-2.243-5-5-5zm0 21c-1.654 0-3-1.346-3-3h6c0 1.654-1.346 3-3 3z"/>
+  </svg>
+  {notificationsVisible && (
+    <div className={styles.dropdown}>
+      <div className={styles.notificationList}>
+        {notifications.map((notification, index) => (
+          <Notification key={index} type={notification.type} message={notification.message} />
+        ))}
+      </div>
     </div>
+  )}
+</div>
     <p>Total spending in the last 30 days: ${totalSpending.toFixed(2)}</p>
     <p>
       Account Balance: ${accountBalance ? accountBalance.toFixed(2) : "Loading..."}
@@ -337,7 +346,7 @@ return (
         <strong>Amount</strong>
         <strong>Frequency</strong>
       </div>
-      {recurringTransactions.map((item: RecurringTransaction, index: number) => (
+      {recurringTransactions?.map((item: RecurringTransaction, index: number) => (
         <div key={index} className={styles.transactionCard}>
           <p>{item.last_date}</p>
           <p>{item.description}</p>
