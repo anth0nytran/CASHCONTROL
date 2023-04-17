@@ -233,7 +233,7 @@ app.get("/api/auth", function (request, response, next) {
 
 // Retrieve recurring transactions for an Item
 // https://plaid.com/docs/api/products/transactions/#transactionsrecurringget
-app.get("/api/transactions/recurring", function (request, response, next) {
+app.get("/api/recurring_transactions", function (request, response, next) {
   Promise.resolve()
     .then(async function () {
       const accountIds = request.query.account_ids ? request.query.account_ids.split(',') : [];

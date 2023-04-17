@@ -160,102 +160,11 @@ useEffect(() => {
 
 
 //recurring transactions
-// State for recurring transactions
 const [recurringTransactions, setRecurringTransactions] = useState([]);
-// const accountId = accounts.length ? accounts[0].account_id:''
-
-type Account={
-  account_id: string
-}
-
-const accountIds = accounts.map((account:Account) => account.account_id).join(',');
-
-// Fetch recurring transactions
-const fetchRecurringTransactions = async (accountsIds: string) => {
-  const response = await fetch(`/api/transactions/recurring?account_ids=${accountIds}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
-    },
-  });
-
-  if (response.ok) {
-    const data = await response.json();
-    setRecurringTransactions(data.recurring_transactions);
-  } else {
-    console.error('Failed to fetch recurring transactions.');
-  }
-};
-
-// UseEffect for fetching recurring transactions when access token and account_id are available
-useEffect(() => {
-  if (accessToken && accountIds) {
-    fetchRecurringTransactions(accountIds);
-  }
-}, [accessToken, accountIds]);
-
-
-// end of recurring transactions
-
-
-// //asset report
-// // Create a separate async function to fetch asset data
-// const [assetReportFetched, setAssetReportFetched] = useState(false);
-
-// const fetchAssetReport = async () => {
-//   try {
-//     const response = await fetch("/api/assets", {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//         "Authorization": `Bearer ${accessToken}`,
-//       },
-//     });
-
-//     // Handle the response here
-//     setAssetReportFetched(true);
-//   } catch (error) {
-//     console.error("Failed to fetch asset data:", error);
-//   }
-// };
-
-// useEffect(() => {
-//   if (accessToken && !assetReportFetched) {
-//     fetchAssetReport();
-//   }
-// }, [accessToken, assetReportFetched]);
-// // end of asset report
-
-
-// notifications:
-// notification bell
-const [notificationsVisible, setNotificationsVisible] = useState(false);
-
-//end of notification bell
-interface NotificationProps {
-  type: 'new' | 'modified' | 'removed';
-  message: string;
-}
-
-const Notification: React.FC<NotificationProps> = ({ type, message }) => {
-  return (
-    <div className={styles.notification}>
-      <p>{message}</p>
-    </div>
-  );
-};
-
-interface NotificationData {
-  type: 'new' | 'modified' | 'removed';
-  message: string;
-}
-
-const [notifications, setNotifications] = useState<NotificationData[]>([]);
 
 useEffect(() => {
-  const fetchTransactionsUpdates = async () => {
-    const response = await fetch('/api/transactions', {
+  const fetchRecurringTransactions = async () => {
+    const response = await fetch('/api/recurring-transactions', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -265,39 +174,18 @@ useEffect(() => {
 
     if (response.ok) {
       const data = await response.json();
-      const transactionUpdates = data.transactionUpdates;
-      console.log('Transaction updates:', transactionUpdates);
-      const newNotifications = [
-        ...transactionUpdates.added.map((txn: any) => ({
-          type: 'new',
-          message: `New transaction: ${txn.name} - ${txn.amount}`,
-        })),
-        ...transactionUpdates.modified.map((txn: any) => ({
-          type: 'modified',
-          message: `Modified transaction: ${txn.name} - ${txn.amount}`,
-        })),
-        ...transactionUpdates.removed.map((txnId: any) => ({
-          type: 'removed',
-          message: `Removed transaction with ID: ${txnId}`,
-        })),
-      ];
-
-      setNotifications((prevNotifications) => [
-        ...prevNotifications,
-        ...newNotifications,
-      ]);
+      setRecurringTransactions(data.recurring_transactions);
     } else {
-      console.error('Failed to fetch transaction updates.');
+      console.error('Failed to fetch recurring transactions.');
     }
   };
 
   if (accessToken) {
-    const intervalId = setInterval(fetchTransactionsUpdates, 30000); // Poll every 30 seconds
-    return () => clearInterval(intervalId);
+    fetchRecurringTransactions();
   }
 }, [accessToken]);
-// end of notifications
 
+//end of recurring transactions
 
 return (
   //start of terms and agreements + name
@@ -368,44 +256,20 @@ return (
       ))}
     </div>
 
-
-
-    {/* <h2>Investment Transactions:</h2> 
-      <div className={styles.investmentContainer}>
+    <h2>Recurring Transactions:</h2>
+    <div className={styles.container}>
       <div className={styles.headers}>
         <strong>Date</strong>
         <strong>Name</strong>
         <strong>Amount</strong>
         <strong>Category</strong>
-  </div>
-  {investmentTransactions.length > 0 &&
-  investmentTransactions.map((item: Transaction, index: number) => (
-    <div key={index} className={styles.investmentCard}>
-      <p>{item.date}</p>
-      <p>{item.name}</p>
-      <p>${item.amount.toFixed(2)}</p>
-      <p>{item.category.join(", ")}</p>
-    </div>
-  ))}
-</div> */}
-
-
-    {/* <button onClick={fetchAssetReport}>Get Asset Report</button> */}
-
-    <h2>Bills:</h2>
-    <div className={styles.container}>
-      <div className={styles.headers}>
-        <strong>Date</strong>
-        <strong>Description</strong>
-        <strong>Amount</strong>
-        <strong>Frequency</strong>
       </div>
-      {recurringTransactions.map((item: RecurringTransaction, index: number) => (
+      {recurringTransactions.map((item: Transaction, index: number) => (
         <div key={index} className={styles.transactionCard}>
-          <p>{item.last_date}</p>
-          <p>{item.description}</p>
-          <p>${item.average_amount.amount.toFixed(2)}</p>
-          <p>{item.frequency}</p>
+          <p>{item.date}</p>
+          <p>{item.name}</p>
+          <p>${item.amount.toFixed(2)}</p>
+          <p>{item.category.join(", ")}</p>
         </div>
       ))}
     </div>
