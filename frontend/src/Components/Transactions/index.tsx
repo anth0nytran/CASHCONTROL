@@ -123,6 +123,73 @@ useEffect(() => {
 
 //end of investment information
 
+//notification
+interface NotificationProps {
+  type: 'new' | 'modified' | 'removed';
+  message: string;
+}
+
+const Notification: React.FC<NotificationProps> = ({ type, message }) => {
+  return (
+    <div className={styles.notification}>
+      <p>{message}</p>
+    </div>
+  );
+};
+
+interface NotificationData {
+  type: 'new' | 'modified' | 'removed';
+  message: string;
+}
+
+const [notifications, setNotifications] = useState<NotificationData[]>([]);
+const [notificationsVisible, setNotificationsVisible] = useState(false);
+
+useEffect(() => {
+  const fetchTransactionsUpdates = async () => {
+    const response = await fetch('/api/transactions', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const transactionUpdates = data.transactionUpdates;
+      console.log('Transaction updates:', transactionUpdates);
+      const newNotifications = [
+        ...transactionUpdates.added.map((txn: any) => ({
+          type: 'new',
+          message: `New transaction: ${txn.name} - ${txn.amount}`,
+        })),
+        ...transactionUpdates.modified.map((txn: any) => ({
+          type: 'modified',
+          message: `Modified transaction: ${txn.name} - ${txn.amount}`,
+        })),
+        ...transactionUpdates.removed.map((txnId: any) => ({
+          type: 'removed',
+          message: `Removed transaction with ID: ${txnId}`,
+        })),
+      ];
+
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        ...newNotifications,
+      ]);
+    } else {
+      console.error('Failed to fetch transaction updates.');
+    }
+  };
+
+  if (accessToken) {
+    const intervalId = setInterval(fetchTransactionsUpdates, 30000); // Poll every 30 seconds
+    return () => clearInterval(intervalId);
+  }
+}, [accessToken]);
+// end of notifications
+
 
 //total spending in 30 days
 const [totalSpending, setTotalSpending] = useState<number>(0);
@@ -160,30 +227,36 @@ useEffect(() => {
 
 
 //recurring transactions
+// State for recurring transactions
 const [recurringTransactions, setRecurringTransactions] = useState([]);
 
-useEffect(() => {
-  const fetchRecurringTransactions = async () => {
-    const response = await fetch('/api/recurring-transactions', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-      },
-    });
+// Collect all account IDs
+const accountIds = accounts ? accounts.map((account: any) => account.account_id).join(',') : '';
 
-    if (response.ok) {
-      const data = await response.json();
-      setRecurringTransactions(data.recurring_transactions);
-    } else {
-      console.error('Failed to fetch recurring transactions.');
-    }
-  };
+// Fetch recurring transactions
+const fetchRecurringTransactions = async (accountIds: any) => {
+  const response = await fetch('/api/transactions/recurring?account_ids=${accountIds}', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
+    },
+  });
 
-  if (accessToken) {
-    fetchRecurringTransactions();
+  if (response.ok) {
+    const data = await response.json();
+    setRecurringTransactions(data.recurring_transactions);
+  } else {
+    console.error('Failed to fetch recurring transactions.');
   }
-}, [accessToken]);
+};
+
+// UseEffect for fetching recurring transactions when access token and account_ids are available
+useEffect(() => {
+  if (accessToken && accountIds) {
+    fetchRecurringTransactions(accountIds);
+  }
+}, [accessToken, accountIds]);
 
 //end of recurring transactions
 
@@ -256,20 +329,20 @@ return (
       ))}
     </div>
 
-    <h2>Recurring Transactions:</h2>
+    <h2>Bills:</h2>
     <div className={styles.container}>
       <div className={styles.headers}>
         <strong>Date</strong>
-        <strong>Name</strong>
+        <strong>Description</strong>
         <strong>Amount</strong>
-        <strong>Category</strong>
+        <strong>Frequency</strong>
       </div>
-      {recurringTransactions.map((item: Transaction, index: number) => (
+      {recurringTransactions.map((item: RecurringTransaction, index: number) => (
         <div key={index} className={styles.transactionCard}>
-          <p>{item.date}</p>
-          <p>{item.name}</p>
-          <p>${item.amount.toFixed(2)}</p>
-          <p>{item.category.join(", ")}</p>
+          <p>{item.last_date}</p>
+          <p>{item.description}</p>
+          <p>${item.average_amount.amount.toFixed(2)}</p>
+          <p>{item.frequency}</p>
         </div>
       ))}
     </div>

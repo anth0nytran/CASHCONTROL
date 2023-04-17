@@ -233,7 +233,7 @@ app.get("/api/auth", function (request, response, next) {
 
 // Retrieve recurring transactions for an Item
 // https://plaid.com/docs/api/products/transactions/#transactionsrecurringget
-app.get("/api/recurring_transactions", function (request, response, next) {
+app.get("/api/transactions/recurring", function (request, response, next) {
   Promise.resolve()
     .then(async function () {
       const accountIds = request.query.account_ids ? request.query.account_ids.split(',') : [];
@@ -241,8 +241,8 @@ app.get("/api/recurring_transactions", function (request, response, next) {
       const lastDate = moment().format("YYYY-MM-DD");
       const configs = {
         access_token: ACCESS_TOKEN,
-        // first_date: firstDate,
-        // last_date: lastDate,
+        start_date: firstDate,
+        end_date: lastDate,
         account_ids: accountIds.length > 0 ? accountIds : undefined,
       };
       const recurringTransactionsResponse = await client.transactionsRecurringGet(configs);
