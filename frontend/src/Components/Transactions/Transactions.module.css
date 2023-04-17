@@ -117,3 +117,82 @@
   padding: 1rem;
   background-color: #f5f5f5;
 }
+
+.notification {
+  padding: 12px 16px;
+  margin: 8px 0;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.notification.new {
+  background-color: #e0f9e2;
+  border: 1px solid #b2f2bb;
+}
+
+.notification.modified {
+  background-color: #fff7e6;
+  border: 1px solid #ffe066;
+}
+
+.notification.removed {
+  background-color: #ffdde5;
+  border: 1px solid #ff6b81;
+}
+
+.notification p {
+  margin: 0;
+  font-weight: 500
+  ;
+}
+
+.notificationlist {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+}
+
+.investmentContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.investmentCard {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 1rem;
+  background-color: #f5f5f5;
+}
+notification {
+  padding: 12px 16px;
+  margin: 8px 0;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.notification.new {
+  background-color: #e0f9e2;
+  border: 1px solid #b2f2bb;
+}
+
+.notification.modified {
+  background-color: #fff7e6;
+  border: 1px solid #ffe066;
+}
+
+.notification.removed {
+  background-color: #ffdde5;
+  border: 1px solid #ff6b81;
+}
+
+.notification p {
+  margin: 0;
+  font-weight: 500
+  ;
+}
+.notification-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+}
