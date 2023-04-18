@@ -46,7 +46,6 @@ export const Transactions: React.FC<Props> = (props) => {
 //  start of terms and agreements + name
 
   const [nameInput, setNameInput] = useState('');
-
   const {
     accessToken,
     showTermsConditions,
@@ -55,7 +54,11 @@ export const Transactions: React.FC<Props> = (props) => {
     dispatch,
   } = useContext(Context);
 
+  const [showTermsModal, setShowTermsModal] = useState(!acceptedTermsConditions);
+
   const handleAcceptTermsConditions = () => {
+    dispatch({ type: 'SET_STATE', state: { acceptedTermsConditions: true } });
+    setShowTermsModal(false);
   };
 
   const handleNameInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -268,32 +271,55 @@ useEffect(() => {
 const [showUserProfile, setShowUserProfile] = useState(false);
 
 const toggleUserProfile = () => {
-  setShowUserProfile(!showUserProfile);
+  // setShowUserProfile(!showUserProfile);
+  setShowUserProfile((prevShowUserProfile) => {
+    console.log('Before toggle:', prevShowUserProfile);
+    console.log('After toggle:', !prevShowUserProfile);
+    return !prevShowUserProfile;
+  });
 };
 
 
 return (
+  <>
+    {showTermsModal && (
+      <div className={styles.termsModal}>
+        <div className={styles.modalContent}>
+          <h3>Terms and Conditions</h3>
+          <p>Please read and accept our terms and conditions to use the application.</p>
+          {/* Add the actual content of your terms and conditions here */}
+          <button onClick={handleAcceptTermsConditions}>Accept</button>
+        </div>
+      </div>
+    )}
   <div className={styles.container}>
     <header className={styles.header}>
       <div className={styles.logoAndSlogan}>
-        <h1>Cash Control</h1>
-          Control your finances
-      </div>
+  <span className={styles.logo}>Cash Control</span>
+  <span className={styles.slogan}>Control your finances with us!</span>
+</div>
       <div className={styles.userControls}>
+        <div className ={styles.greetingAndBell}>
         <span className={styles.greeting}>{userName ? `Hi, ${userName}!` : "Hi!"}</span>
+
         <button className={styles.personalInfoButton} onClick={toggleUserProfile}>Personal Information</button>
-        <div className={styles.dropdownContent} style={{ display: showUserProfile ? 'block' : 'none' }}>
+        <div className={`${styles.dropdownContent} ${showUserProfile ? styles.show : ''}`}>
           <UserProfile accessToken={accessToken} />
+          </div>
         </div>
         <div className={styles.bellIcon} onClick={() => setNotificationsVisible(!notificationsVisible)}>
    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
      <path d="M12 2C9.243 2 7 4.243 7 7v5.586l-.707.707A.996.996 0 006 14v2c0 .552.448 1 1 1h9c.552 0 1-.448 1-1v-2c0-.379-.214-.725-.553-.895l-.004-.002-.006-.003-.01-.005-.018-.01a.955.955 0 00-.31-.182l-.023-.012a1.02 1.02 0 00-.07-.037l-.024-.012-.007-.003-.002-.001-.707-.293V7c0-2.757-2.243-5-5-5zm0 21c-1.654 0-3-1.346-3-3h6c0 1.654-1.346 3-3 3z"/>
    </svg>
    {notificationsVisible && (
-    <div className={styles.dropdown}>
+    <div className={`${styles.dropdown} ${notificationsVisible ? styles.show : ''}`}>
        <div className={styles.notificationList}>
-         {notifications.map((notification, index) => (
-           <Notification key={index} type={notification.type} message={notification.message} />
+       {notifications.slice(0, 30).map((notification, index) => (
+           <Notification 
+            key={index} 
+            type={notification.type} 
+            message={notification.message} 
+            />
          ))}
        </div>
      </div>
@@ -360,6 +386,7 @@ return (
       <InvestmentTransactionList token={accessToken} />
     </div>
   </div>
+  </>
 );
       }
     

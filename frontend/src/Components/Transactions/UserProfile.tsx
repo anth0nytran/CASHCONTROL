@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import styles from './Transactions.module.css';
 
 interface UserProfileProps {
   accessToken?: string | null;

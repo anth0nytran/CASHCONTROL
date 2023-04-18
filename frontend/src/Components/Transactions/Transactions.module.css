@@ -6,7 +6,7 @@
   padding: 20px;
 } 
 
- .headers, 
+.headers, 
 .transactionCard {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr 2fr;
@@ -40,7 +40,7 @@
   text-align: left;
 }
 
-.termsConditionsOverlay {
+.termsModal {
   align-items: center;
   background-color: rgba(0, 0, 0, 0.75);
   display: flex;
@@ -53,7 +53,7 @@
   z-index: 1000;
 }
 
-.termsConditionsContent {
+.modalContent {
   background-color: #fff;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -63,23 +63,23 @@
   width: 90%;
 }
 
-.termsConditionsContent h1 {
+.modalContent h3 {
   margin-bottom: 20px;
 }
 
-.termsConditionsContent p {
+.modalContent p {
   font-size: 1rem;
   margin-bottom: 20px;
   text-align: left;
 }
 
-.termsConditionsContent label {
+.modalContent label {
   display: block;
   font-size: 0.9rem;
   margin-bottom: 10px;
 }
 
-.termsConditionsContent input[type='text'] {
+.modalContent input[type='text'] {
   border: 1px solid #ccc;
   border-radius: 5px;
   display: block;
@@ -89,7 +89,7 @@
   width: 100%;
 }
 
-.termsConditionsContent button {
+.modalContent button {
   background-color: #007bff;
   border: none;
   border-radius: 5px;
@@ -101,7 +101,7 @@
   transition: background-color 0.3s;
 }
 
-.termsConditionsContent button:hover {
+.modalContent button:hover {
   background-color: #0056b3;
 }
 
@@ -115,172 +115,179 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 1rem;
-  background-color: #f5f5f5;
+background-color: #f5f5f5;
 }
 
 .notification {
-  padding: 12px 16px;
-  margin: 8px 0;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+padding: 12px 16px;
+margin: 8px 0;
+border-radius: 4px;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .notification.new {
-  background-color: #e0f9e2;
-  border: 1px solid #b2f2bb;
+background-color: #e0f9e2;
+border: 1px solid #b2f2bb;
 }
 
 .notification.modified {
-  background-color: #fff7e6;
-  border: 1px solid #ffe066;
+background-color: #fff7e6;
+border: 1px solid #ffe066;
 }
 
 .notification.removed {
-  background-color: #ffdde5;
-  border: 1px solid #ff6b81;
+background-color: #ffdde5;
+border: 1px solid #ff6b81;
 }
 
 .notification p {
-  margin: 0;
-  font-weight: 500
-  ;
-}
-
-.notificationlist {
-  max-height: 300px;
-  overflow-y: auto;
-  margin-bottom: 16px;
-}
-
-.investmentContainer {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1rem;
-}
-
-.investmentCard {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 1rem;
-  background-color: #f5f5f5;
-}
-.notification {
-  padding: 12px 16px;
-  margin: 8px 0;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.notification.new {
-  background-color: #e0f9e2;
-  border: 1px solid #b2f2bb;
-}
-
-.notification.modified {
-  background-color: #fff7e6;
-  border: 1px solid #ffe066;
-}
-
-.notification.removed {
-  background-color: #ffdde5;
-  border: 1px solid #ff6b81;
-}
-
-.notification p {
-  margin: 0;
-  font-weight: 500;
+margin: 0;
+font-weight: 500;
 }
 
 .notification-list {
-  max-height: 200px; /* Adjust this value based on the height of your notifications */
-  overflow-y: auto;
-  position: absolute;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  width: 100%;
-  z-index: 1;
+max-height: 200px; /* Adjust this value based on the height of your notifications */
+overflow-y: auto;
+position: absolute;
+background-color: #fff;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+border-radius: 4px;
+width: 100%;
+z-index: 1;
 }
 
 .dropdown {
-  margin-top: 8px;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  max-height: 400px; /* You can adjust this value to control the height of the dropdown */
+  overflow-y: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.dropdown.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .notification-list::-webkit-scrollbar {
-  display: none;
+display: none;
 }
+
 .container {
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  max-width: 1024px;
-  padding: 20px;
+display: flex;
+flex-direction: column;
+margin: 0 auto;
+max-width: 1024px;
+padding: 20px;
 }
 
 /* Header */
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 30px;
 }
 
 .logoAndSlogan {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
 }
 
 .userControls {
-  display: flex;
-  align-items: center;
+display: flex;
+flex-direction: column;
+align-items: flex-end;
+position: relative;
 }
 
 .greeting {
-  margin-right: 10px;
+margin-right: 30px;
 }
 
+@keyframes fadeIn {
+from {
+  opacity: 0;
+}
+to {
+  opacity: 1;
+}
+}
 .personalInfoButton {
-  background-color: #007bff;
-  border: none;
+background-color: #007bff;
+border: none;
+border-radius: 5px;
+color: #fff;
+cursor: pointer;
+font-size: 1rem;
+padding: 10px 20px;
+text-transform: uppercase;
+transition: background-color 0.3s;
+margin-right: 10px;
+position: relative;
+}
+
+.dropdownContent {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateY(-10px) translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  background-color: #fff;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  color: #fff;
-  cursor: pointer;
-  font-size: 1rem;
-  padding: 10px 20px;
-  text-transform: uppercase;
-  transition: background-color 0.3s;
-  margin-right: 10px;
+  padding: 10px;
+  min-width: 200px;
+}
+
+.dropdownContent.show {
+opacity: 1;
+animation: fadeIn 0.3s ease;
+pointer-events: auto;
 }
 
 .personalInfoButton:hover {
-  background-color: #0056b3;
+background-color: #0056b3;
 }
 
 /* Main content */
 .mainContent {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 30px;
+display: flex;
+justify-content: space-between;
+margin-bottom: 30px;
 }
 
 .totalSpendingContainer,
 .accountBalanceContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+display: flex;
+flex-direction: column;
+align-items: center;
 }
 
 .totalSpendingLabel,
 .accountBalanceLabel {
-  font-size: 1.2rem;
-  font-weight: bold;
+font-size: 1.2rem;
+font-weight: bold;
 }
 
 .totalSpending,
 .accountBalance {
-  font-size: 1.5rem;
-  font-weight: bold;
+font-size: 1.5rem;
+font-weight: bold;
 }
 
 /* Graph container */
@@ -305,15 +312,19 @@
   margin-bottom: 10px;
 }
 
-/* .logo {
-  font-size: 2rem;
+.logo {
+  font-size: 3.5rem;
   font-weight: bold;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0;
+}
+
+.logoAndSlogan span:nth-child(2) {
+  font-size: 1rem;
+  text-align: center;
 }
 
 .slogan {
-  font-size: 1.1rem;
-  font-weight: 500;
+  font-size: 1.2rem;
   margin-top: 0;
 }
 
@@ -326,5 +337,4 @@
 .bellIcon {
   margin-left: 10px;
   cursor: pointer;
-} */
-
+}
