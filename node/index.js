@@ -340,6 +340,23 @@ app.get("/api/identity", function (request, response, next) {
     })
     .catch(next);
 });
+// app.get("/api/identity", async (request, response, next) => {
+//   const accessToken = request.headers.authorization?.split(" ")[1];
+
+//   if (!accessToken) {
+//     response.status(401).json({ message: "Access token is required" });
+//     return;
+//   }
+
+//   try {
+//     const identityResponse = await client.identityGet({ access_token: accessToken });
+//     prettyPrintResponse(identityResponse);
+//     response.json({ identity: identityResponse.data.accounts });
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
 
 // Retrieve real-time Balances for each of an Item's accounts
 // https://plaid.com/docs/#balance

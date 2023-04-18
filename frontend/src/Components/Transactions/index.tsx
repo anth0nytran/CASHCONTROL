@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Table } from "../Table";
 import { Data, Transaction, Categories, RecurringTransaction } from '../../interfaces';
-import styles from './Transactions.module.css';
 import Context from "../../Context";
 import UserProfile from './UserProfile';
 import InvestmentTransactionList from "./InvestmentTransactionList";
 import './DropdownMenu.css';
+import styles from './Transactions.module.css';
 
 interface Props {
   token?: string | null;
@@ -101,7 +100,7 @@ useEffect(() => {
 }, [accessToken]);
 // End of account balance
 
-//investment information
+// investment information
 // const [investmentTransactions, setInvestmentTransactions] = useState([]);
 
 // useEffect(() => {
@@ -124,7 +123,7 @@ useEffect(() => {
 //   }
 // }, [props.token]);
 
-//end of investment information
+// end of investment information
 
 //notification
 interface NotificationProps {
