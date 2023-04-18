@@ -1,13 +1,26 @@
+body {
+  background-color: var(--background-color);
+  font-family: 'Roboto', sans-serif;
+}
+
 .container {
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  max-width: 600px;
+  max-width: 1024px;
   padding: 20px;
 } 
 
+:root {
+  --primary-color: #1e6ba9; /* Dark blue */
+  --secondary-color: #4caf50; /* Green */
+  --neutral-color: #4a4a4a; /* Dark gray */
+  --background-color: #ffffff; /* White */
+}
+
 .headers, 
 .transactionCard {
+  color: var(--neutral-color);
   display: grid;
   grid-template-columns: 1fr 2fr 1fr 2fr;
   gap: 10px;
@@ -16,6 +29,7 @@
 }
 
 .headers {
+  background-color: var(--primary-color);
   font-weight: bold;
   text-transform: uppercase;
   border-bottom: 2px solid #ccc;
@@ -24,8 +38,12 @@
 
 .transactionCard {
   background-color: #f9f9f9;
-  border-radius: 5px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr 2fr 1fr 2fr;
   margin-bottom: 10px;
   padding: 10px;
 }
@@ -54,7 +72,7 @@
 }
 
 .modalContent {
-  background-color: #fff;
+  background-color: var(--primary-color);
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   max-width: 600px;
@@ -126,7 +144,7 @@ box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .notification.new {
-background-color: #e0f9e2;
+background-color: var(--secondary-color);
 border: 1px solid #b2f2bb;
 }
 
@@ -193,17 +211,17 @@ padding: 20px;
 
 /* Header */
 .header {
-display: flex;
-justify-content: space-between;
-align-items: center;
-margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
 }
 
 .logoAndSlogan {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .userControls {
@@ -226,7 +244,7 @@ to {
 }
 }
 .personalInfoButton {
-background-color: #007bff;
+background-color: var(--primary-color);
 border: none;
 border-radius: 5px;
 color: #fff;
@@ -280,6 +298,7 @@ align-items: center;
 
 .totalSpendingLabel,
 .accountBalanceLabel {
+color: var(--neutral-color);
 font-size: 1.2rem;
 font-weight: bold;
 }
@@ -337,4 +356,12 @@ font-weight: bold;
 .bellIcon {
   margin-left: 10px;
   cursor: pointer;
+}
+
+.bellIcon path {
+  fill: var(--accent-color2);
+}
+
+.bellIcon:hover path {
+  fill: var(--accent-color3);
 }
