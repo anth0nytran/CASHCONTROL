@@ -16,6 +16,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.6.0",
     "ejs": "2.5.x",
+    "eslint-config-react-app": "^7.0.1",
     "express": "4.16.x",
     "moment": "2.22.x",
     "nodemon": "^2.0.20",
