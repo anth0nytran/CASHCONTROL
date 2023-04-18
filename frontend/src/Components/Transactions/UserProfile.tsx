@@ -23,7 +23,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ accessToken = '' }) => {
           'Authorization': `Bearer ${accessToken}`,
         },
       });
-  
       if (response.ok) {
         const data = await response.json();
         const account = data.identity[0];
@@ -32,7 +31,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ accessToken = '' }) => {
           const primaryAddress = owner.addresses.find((address: any) => address.primary);
           const primaryEmail = owner.emails.find((email: any) => email.primary);
           const primaryPhone = owner.phone_numbers.find((phone: any) => phone.primary);
-  
           setIdentity({
             name: owner.names[0],
             address: `${primaryAddress.data.street}, ${primaryAddress.data.city}, ${primaryAddress.data.region} ${primaryAddress.data.postal_code}, ${primaryAddress.data.country}`,
@@ -44,7 +42,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ accessToken = '' }) => {
         console.error('Failed to fetch identity.');
       }
     };
-  
     fetchIdentity();
   }, [accessToken]);
 

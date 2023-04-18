@@ -319,13 +319,10 @@ return (
 
     <div className={styles.transactions}>
       <h2>Transaction History</h2>
-      <div className={styles.container}>
-      <div className={styles.headers}>
          <strong>Date</strong>
         <strong>Name</strong>
          <strong>Amount</strong>
          <strong>Category</strong>
-       </div>
       {data.map((item: Transaction, index: number) => (
         <div key={index} className={styles.transactionCard}>
            <p>{item.date}</p>
@@ -335,17 +332,14 @@ return (
            </div>
         ))}
     </div>
-    </div>
 
     <div className={styles.bills}>
       <h2>Bills</h2>
-      <div className={styles.container}>
-      <div className={styles.headers}>
         <strong>Date</strong>
         <strong>Description</strong>
         <strong>Amount</strong>
         <strong>Frequency</strong>
-        </div>
+  
        {recurringTransactions?.map((item: RecurringTransaction, index: number) => (
          <div key={index} className={styles.transactionCard}>
            <p>{item.last_date}</p>
@@ -355,15 +349,12 @@ return (
          </div>
        ))}
     </div>
-</div>
     <div className={styles.investments}>
       <InvestmentTransactionList token={accessToken} />
     </div>
   </div>
 );
       }
-
-
 // return (
 //   //start of terms and agreements + name
 //   <div>
@@ -397,12 +388,6 @@ return (
 //     ) //end of terms and agreements + name
 //     }
 //     <h3>{userName ? `Hi, ${userName}!` : "Hi!"}</h3>
-    
-//     <button onClick={toggleUserProfile}>Personal Information</button>
-// <div className="dropdown-content" style={{ display: showUserProfile ? 'block' : 'none' }}>
-//   <UserProfile accessToken={accessToken} />
-// </div>
-
 //     <h4>Notifications</h4>
 //     <div className={styles.bellIcon} onClick={() => setNotificationsVisible(!notificationsVisible)}>
 //   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
@@ -457,21 +442,6 @@ return (
 //         </div>
 //       ))}
 //     </div>
-//     <InvestmentTransactionList token={accessToken} />
-//     {/* <div>
-//     {investmentTransactions.length > 0 ? (
-//   investmentTransactions.map((transaction: InvestmentTransaction, index: number) => (
-//     <div key={index}>
-//       <h3>{transaction.name}</h3>
-//       <p>Amount: {transaction.amount}</p>
-//       <p>Date: {transaction.date}</p>
-//     </div>
-//   ))
-// ) : (
-//   <p>No investment accounts available.</p>
-// )}
-//   </div> */}
 //   </div>
-  
 // );
-//       }
+      // }
