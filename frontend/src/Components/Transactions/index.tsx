@@ -3,6 +3,9 @@ import { Table } from "../Table";
 import { Data, Transaction, Categories, RecurringTransaction } from '../../interfaces';
 import styles from './Transactions.module.css';
 import Context from "../../Context";
+import UserProfile from './UserProfile';
+import InvestmentTransactionList from "./InvestmentTransactionList";
+import './DropdownMenu.css';
 
 interface Props {
   token?: string | null;
@@ -263,98 +266,183 @@ useEffect(() => {
 
 
 //user profile:
+const [showUserProfile, setShowUserProfile] = useState(false);
 
-
-
+const toggleUserProfile = () => {
+  setShowUserProfile(!showUserProfile);
+};
 
 
 return (
-  //start of terms and agreements + name
-  <div>
-    {accessToken && !acceptedTermsConditions && (
-      <div className={styles.termsConditionsOverlay}>
-        <div className={styles.termsConditionsContent}>
-          <h1>Hello, welcome to Cash Control</h1>
-          <p>
-            {/* Add your Terms and Conditions text here */}
-            <label>
-              <input
-                type="checkbox"
-                onChange={handleAcceptTermsConditions} //NEED TO FIX THIS DOES A PROMPT
-              />
-              I accept the Terms and Conditions
-            </label>
-          </p>
-          {!userName && (
-            <div>
-              <p>Hello, what is your name?</p>
-              <input
-                type="text"
-                value={nameInput}
-                onChange={handleNameInputChange}
-              />
-              <button onClick={handleSetName}>Submit</button>
-            </div>
-          )}
-        </div>
+  <div className={styles.container}>
+    <header className={styles.header}>
+      <div className={styles.logoAndSlogan}>
+        <h1>Cash Control</h1>
+          Control your finances
       </div>
-    ) //end of terms and agreements + name
-    }
-    <h3>{userName ? `Hi, ${userName}!` : "Hi!"}</h3>
-    <h4>Notifications</h4>
-    <div className={styles.bellIcon} onClick={() => setNotificationsVisible(!notificationsVisible)}>
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-    <path d="M12 2C9.243 2 7 4.243 7 7v5.586l-.707.707A.996.996 0 006 14v2c0 .552.448 1 1 1h9c.552 0 1-.448 1-1v-2c0-.379-.214-.725-.553-.895l-.004-.002-.006-.003-.01-.005-.018-.01a.955.955 0 00-.31-.182l-.023-.012a1.02 1.02 0 00-.07-.037l-.024-.012-.007-.003-.002-.001-.707-.293V7c0-2.757-2.243-5-5-5zm0 21c-1.654 0-3-1.346-3-3h6c0 1.654-1.346 3-3 3z"/>
-  </svg>
-  {notificationsVisible && (
+      <div className={styles.userControls}>
+        <span className={styles.greeting}>{userName ? `Hi, ${userName}!` : "Hi!"}</span>
+        <button className={styles.personalInfoButton} onClick={toggleUserProfile}>Personal Information</button>
+        <div className={styles.dropdownContent} style={{ display: showUserProfile ? 'block' : 'none' }}>
+          <UserProfile accessToken={accessToken} />
+        </div>
+        <div className={styles.bellIcon} onClick={() => setNotificationsVisible(!notificationsVisible)}>
+   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+     <path d="M12 2C9.243 2 7 4.243 7 7v5.586l-.707.707A.996.996 0 006 14v2c0 .552.448 1 1 1h9c.552 0 1-.448 1-1v-2c0-.379-.214-.725-.553-.895l-.004-.002-.006-.003-.01-.005-.018-.01a.955.955 0 00-.31-.182l-.023-.012a1.02 1.02 0 00-.07-.037l-.024-.012-.007-.003-.002-.001-.707-.293V7c0-2.757-2.243-5-5-5zm0 21c-1.654 0-3-1.346-3-3h6c0 1.654-1.346 3-3 3z"/>
+   </svg>
+   {notificationsVisible && (
     <div className={styles.dropdown}>
-      <div className={styles.notificationList}>
-        {notifications.map((notification, index) => (
-          <Notification key={index} type={notification.type} message={notification.message} />
-        ))}
+       <div className={styles.notificationList}>
+         {notifications.map((notification, index) => (
+           <Notification key={index} type={notification.type} message={notification.message} />
+         ))}
+       </div>
+     </div>
+   )}
       </div>
-    </div>
-  )}
-</div>
-    <p>Total spending in the last 30 days: ${totalSpending.toFixed(2)}</p>
-    <p>
-      Account Balance: ${accountBalance ? accountBalance.toFixed(2) : "Loading..."}
-    </p>
-    <h2>Transaction History:</h2>
-    <div className={styles.container}>
-      <div className={styles.headers}>
-        <strong>Date</strong>
-        <strong>Name</strong>
-        <strong>Amount</strong>
-        <strong>Category</strong>
       </div>
-      {data.map((item: Transaction, index: number) => (
-        <div key={index} className={styles.transactionCard}>
-          <p>{item.date}</p>
-          <p>{item.name}</p>
-          <p>${item.amount.toFixed(2)}</p>
-          <p>{item.category.join(", ")}</p>
-        </div>
-      ))}
+    </header>
+
+    <div className={styles.mainContent}>
+      <div className={styles.totalSpendingContainer}>
+        <span className={styles.totalSpendingLabel}>Total spending in the last 30 days:</span>
+        <span className={styles.totalSpending}>${totalSpending.toFixed(2)}</span>
+      </div>
+      <div className={styles.accountBalanceContainer}>
+        <span className={styles.accountBalanceLabel}>Total Account Balances:</span>
+        <span className={styles.accountBalance}>${accountBalance ? accountBalance.toFixed(2) : "Loading..."}</span>
+      </div>
     </div>
 
-    <h2>Bills:</h2>
-    <div className={styles.container}>
-      <div className={styles.headers}>
+    <div className={styles.graphContainer}>
+      {/* Insert your graph component here */}
+    </div>
+
+    <div className={styles.transactions}>
+      <h2>Transaction History</h2>
+         <strong>Date</strong>
+        <strong>Name</strong>
+         <strong>Amount</strong>
+         <strong>Category</strong>
+      {data.map((item: Transaction, index: number) => (
+        <div key={index} className={styles.transactionCard}>
+           <p>{item.date}</p>
+           <p>{item.name}</p>
+           <p>${item.amount.toFixed(2)}</p>
+           <p>{item.category.join(", ")}</p>
+           </div>
+        ))}
+    </div>
+
+    <div className={styles.bills}>
+      <h2>Bills</h2>
         <strong>Date</strong>
         <strong>Description</strong>
         <strong>Amount</strong>
         <strong>Frequency</strong>
-      </div>
-      {recurringTransactions?.map((item: RecurringTransaction, index: number) => (
-        <div key={index} className={styles.transactionCard}>
-          <p>{item.last_date}</p>
-          <p>{item.description}</p>
-          <p>${item.average_amount.amount.toFixed(2)}</p>
-          <p>{item.frequency}</p>
-        </div>
-      ))}
+  
+       {recurringTransactions?.map((item: RecurringTransaction, index: number) => (
+         <div key={index} className={styles.transactionCard}>
+           <p>{item.last_date}</p>
+           <p>{item.description}</p>
+           <p>${item.average_amount.amount.toFixed(2)}</p>
+           <p>{item.frequency}</p>
+         </div>
+       ))}
+    </div>
+    <div className={styles.investments}>
+      <InvestmentTransactionList token={accessToken} />
     </div>
   </div>
 );
       }
+// return (
+//   //start of terms and agreements + name
+//   <div>
+//     {accessToken && !acceptedTermsConditions && (
+//       <div className={styles.termsConditionsOverlay}>
+//         <div className={styles.termsConditionsContent}>
+//           <h1>Hello, welcome to Cash Control</h1>
+//           <p>
+//             {/* Add your Terms and Conditions text here */}
+//             <label>
+//               <input
+//                 type="checkbox"
+//                 onChange={handleAcceptTermsConditions} //NEED TO FIX THIS DOES A PROMPT
+//               />
+//               I accept the Terms and Conditions
+//             </label>
+//           </p>
+//           {!userName && (
+//             <div>
+//               <p>Hello, what is your name?</p>
+//               <input
+//                 type="text"
+//                 value={nameInput}
+//                 onChange={handleNameInputChange}
+//               />
+//               <button onClick={handleSetName}>Submit</button>
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     ) //end of terms and agreements + name
+//     }
+//     <h3>{userName ? `Hi, ${userName}!` : "Hi!"}</h3>
+//     <h4>Notifications</h4>
+//     <div className={styles.bellIcon} onClick={() => setNotificationsVisible(!notificationsVisible)}>
+//   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+//     <path d="M12 2C9.243 2 7 4.243 7 7v5.586l-.707.707A.996.996 0 006 14v2c0 .552.448 1 1 1h9c.552 0 1-.448 1-1v-2c0-.379-.214-.725-.553-.895l-.004-.002-.006-.003-.01-.005-.018-.01a.955.955 0 00-.31-.182l-.023-.012a1.02 1.02 0 00-.07-.037l-.024-.012-.007-.003-.002-.001-.707-.293V7c0-2.757-2.243-5-5-5zm0 21c-1.654 0-3-1.346-3-3h6c0 1.654-1.346 3-3 3z"/>
+//   </svg>
+//   {notificationsVisible && (
+//     <div className={styles.dropdown}>
+//       <div className={styles.notificationList}>
+//         {notifications.map((notification, index) => (
+//           <Notification key={index} type={notification.type} message={notification.message} />
+//         ))}
+//       </div>
+//     </div>
+//   )}
+// </div>
+//     <p>Total spending in the last 30 days: ${totalSpending.toFixed(2)}</p>
+//     <p>
+//       Account Balance: ${accountBalance ? accountBalance.toFixed(2) : "Loading..."}
+//     </p>
+//     <h2>Transaction History:</h2>
+//     <div className={styles.container}>
+//       <div className={styles.headers}>
+//         <strong>Date</strong>
+//         <strong>Name</strong>
+//         <strong>Amount</strong>
+//         <strong>Category</strong>
+//       </div>
+//       {data.map((item: Transaction, index: number) => (
+//         <div key={index} className={styles.transactionCard}>
+//           <p>{item.date}</p>
+//           <p>{item.name}</p>
+//           <p>${item.amount.toFixed(2)}</p>
+//           <p>{item.category.join(", ")}</p>
+//         </div>
+//       ))}
+//     </div>
+
+//     <h2>Bills:</h2>
+//     <div className={styles.container}>
+//       <div className={styles.headers}>
+//         <strong>Date</strong>
+//         <strong>Description</strong>
+//         <strong>Amount</strong>
+//         <strong>Frequency</strong>
+//       </div>
+//       {recurringTransactions?.map((item: RecurringTransaction, index: number) => (
+//         <div key={index} className={styles.transactionCard}>
+//           <p>{item.last_date}</p>
+//           <p>{item.description}</p>
+//           <p>${item.average_amount.amount.toFixed(2)}</p>
+//           <p>{item.frequency}</p>
+//         </div>
+//       ))}
+//     </div>
+//   </div>
+// );
+      // }

@@ -1,0 +1,23 @@
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: linear-gradient(135deg, #3a7bd5, #3a6073); /* Gradient background */
+  color: #fff; /* White text color */
+  min-width: 250px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  padding: 12px 16px;
+  border-radius: 5px;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.dropdown-content p {
+  margin: 0 0 10px;
+}
+
+.dropdown-content p:last-child {
+  margin-bottom: 0;
+}
