@@ -1,12 +1,12 @@
-/* .container {
+.container {
   display: flex;
   flex-direction: column;
   margin: 0 auto;
   max-width: 600px;
   padding: 20px;
-} */
+} 
 
-/* .headers, */
+ .headers, 
 .transactionCard {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr 2fr;
@@ -15,12 +15,12 @@
   padding: 10px;
 }
 
-/* .headers {
+.headers {
   font-weight: bold;
   text-transform: uppercase;
   border-bottom: 2px solid #ccc;
   margin-bottom: 10px;
-} */
+}
 
 .transactionCard {
   background-color: #f9f9f9;

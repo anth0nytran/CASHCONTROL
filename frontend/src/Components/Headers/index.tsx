@@ -22,10 +22,10 @@ const Header = () => {
 
   return (
     <div className={styles.grid}>
-      <h3 className={styles.title}>CashControl</h3>
 
       {!linkSuccess ? (
         <>
+          <h3 className={styles.title}>CashControl</h3>
           <h4 className={styles.subtitle}>All of your financial needs</h4>
           {/* message if backend is not running and there is no link token */}
           {!backend ? (
@@ -74,7 +74,6 @@ const Header = () => {
             /* If not using the payment_initiation product, show the item_id and access_token information */ <>
               {isItemAccess ? (
                 <h4 className={styles.subtitle}>
-                  Control your finances!
                 </h4>
               ) : (
                 <h4 className={styles.subtitle}>

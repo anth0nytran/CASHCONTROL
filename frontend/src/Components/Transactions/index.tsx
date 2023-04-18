@@ -319,10 +319,13 @@ return (
 
     <div className={styles.transactions}>
       <h2>Transaction History</h2>
-         <strong>Date</strong>
+      <div className={styles.container}>
+      <div className={styles.headers}>
+        <strong>Date</strong>
         <strong>Name</strong>
          <strong>Amount</strong>
          <strong>Category</strong>
+         </div>
       {data.map((item: Transaction, index: number) => (
         <div key={index} className={styles.transactionCard}>
            <p>{item.date}</p>
@@ -331,15 +334,18 @@ return (
            <p>{item.category.join(", ")}</p>
            </div>
         ))}
+        </div>
     </div>
 
     <div className={styles.bills}>
       <h2>Bills</h2>
+      <div className={styles.container}>
+      <div className={styles.headers}>
         <strong>Date</strong>
         <strong>Description</strong>
         <strong>Amount</strong>
         <strong>Frequency</strong>
-  
+        </div>
        {recurringTransactions?.map((item: RecurringTransaction, index: number) => (
          <div key={index} className={styles.transactionCard}>
            <p>{item.last_date}</p>
@@ -348,6 +354,7 @@ return (
            <p>{item.frequency}</p>
          </div>
        ))}
+       </div>
     </div>
     <div className={styles.investments}>
       <InvestmentTransactionList token={accessToken} />
@@ -355,6 +362,7 @@ return (
   </div>
 );
       }
+    
 // return (
 //   //start of terms and agreements + name
 //   <div>

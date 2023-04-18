@@ -85,6 +85,7 @@ const App = () => {
   return (
     <div className={styles.App}>
       <div className={styles.container}>
+        <Header />
         {linkSuccess && (
           <>
             {isPaymentInitiation && <Products />}

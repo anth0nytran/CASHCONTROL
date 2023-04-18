@@ -1,8 +1,8 @@
-export interface DataItem extends Transaction, RecurringTransaction {}
+// export interface DataItem extends Transaction, RecurringTransaction {}
 
-// export interface DataItem {
-//   [key: string]: string | number;
-// }
+export interface DataItem {
+  [key: string]: string | number;
+}
 
 export interface Transaction {
   date: string;
