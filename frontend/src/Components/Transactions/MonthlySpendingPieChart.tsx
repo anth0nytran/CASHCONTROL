@@ -77,7 +77,8 @@ const MonthlySpendingPieChart: React.FC<Props> = ({ transactions }) => {
   }, [transactions]);
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    // <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveContainer width={250} height={250}>
       <PieChart width={800} height={400}>
         <Pie
           data={pieChartData}

@@ -84,8 +84,8 @@ const App = () => {
   }, [dispatch, generateToken, getInfo]);
 
   return (
-    <IonPage>
-      <IonContent>
+    // <IonPage>
+    //   <IonContent>
     <div className={styles.App}>
       <div className={styles.container}>
         <Header />
@@ -102,8 +102,8 @@ const App = () => {
         
       </div>
     </div>
-    </IonContent>
-    </IonPage>
+    // </IonContent>
+    // </IonPage>
   );
 };
 

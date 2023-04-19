@@ -1,0 +1,48 @@
+
+.card_container {
+    width: 350px;
+    perspective: 1000px;
+  }
+  
+  .ionCard {
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(45deg, #4b6cb7, #182848);
+    background-image: linear-gradient(#453F78, #3F2E56,#401F3E);
+    color: white;
+    height: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+.card_logo {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 48px;
+    height: 48px;
+    background-image: url("./Images/master_card.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.card_chip {
+    margin-top: 10px;
+    width: 40px;
+    height: 40px;
+    background-image: url("./Images/card_chip.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.name_number {
+    font-size: 14px;
+    letter-spacing: 2px;
+}
+
+.total_spending,
+.total_balance {
+    letter-spacing: .456rem;
+    margin-top: 10px;
+}

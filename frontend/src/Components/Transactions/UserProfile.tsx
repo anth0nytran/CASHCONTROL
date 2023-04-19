@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Transactions.module.css';
 
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle
+} from "@ionic/react";
+
 interface UserProfileProps {
   accessToken?: string | null;
 }

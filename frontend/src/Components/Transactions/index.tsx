@@ -8,6 +8,7 @@ import styles from './Transactions.module.css';
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
 import MonthlySpendingPieChart from './MonthlySpendingPieChart';
 import CreditCard from "./CreditCard";
+import LineChart30Days from "./LineChart30Days";
 
 import "@ionic/react/css/core.css";
 import "@ionic/react/css/normalize.css";
@@ -358,9 +359,10 @@ export const Transactions: React.FC<Props> = (props) => {
         <div className={styles.graphContainer}>
           <div className={styles.graphContent}>
             <MonthlySpendingPieChart transactions={data} />
-
           </div>
-
+          <div className={styles.graphContent}>
+          <LineChart30Days />
+          </div>
         </div>
 
         <div className={styles.transactions}>

@@ -34,21 +34,21 @@ const InvestmentTransactionList = (props: { token: string | null | undefined }) 
 
   return (
     <div>
-  <h2>Investment Transactions</h2>
-  {investmentTransactions.length > 0 ? (
-    investmentTransactions.map((transaction: InvestmentTransaction, index: number) => (
-      <div key={index}>
-        <h3>{transaction.name}</h3>
-        <p>Type: {transaction.type}</p>
-        <p>Subtype: {transaction.subtype || 'N/A'}</p>
-        <p>Available Balance: {transaction.available !== null ? transaction.available : 'N/A'}</p>
-        <p>Current Balance: {transaction.current !== null ? transaction.current : 'N/A'}</p>
-      </div>
-    ))
-  ) : (
-    <p>No investment accounts available.</p>
-  )}
-</div>
+      <h2>Investment Transactions</h2>
+      {investmentTransactions.length > 0 ? (
+        investmentTransactions.map((transaction: InvestmentTransaction, index: number) => (
+          <div key={index}>
+            <h3>{transaction.name}</h3>
+            <p>Type: {transaction.type}</p>
+            <p>Subtype: {transaction.subtype || 'N/A'}</p>
+            <p>Available Balance: {transaction.available !== null ? transaction.available : 'N/A'}</p>
+            <p>Current Balance: {transaction.current !== null ? transaction.current : 'N/A'}</p>
+          </div>
+        ))
+      ) : (
+        <p>No investment accounts available.</p>
+      )}
+    </div>
 
   );
 };
