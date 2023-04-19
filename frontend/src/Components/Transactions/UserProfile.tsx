@@ -50,7 +50,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ accessToken = '' }) => {
     <div>
       {identity && (
         <>
-          <h3>User Profile</h3>
           <p>Name: {identity.name}</p>
           <p>Address: {identity.address}</p>
           <p>Email: {identity.email}</p>

@@ -7,6 +7,13 @@ import './DropdownMenu.css';
 import styles from './Transactions.module.css';
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
 import MonthlySpendingPieChart from './MonthlySpendingPieChart';
+import CreditCard from "./CreditCard";
+
+import "@ionic/react/css/core.css";
+import "@ionic/react/css/normalize.css";
+import "@ionic/react/css/structure.css";
+import "@ionic/react/css/typography.css";
+
 
 interface Props {
   token?: string | null;
@@ -256,6 +263,7 @@ export const Transactions: React.FC<Props> = (props) => {
     });
   };
 
+  const [cardFlipped, setCardFlipped] = useState(false);
 
   return (
     <>
@@ -279,10 +287,10 @@ export const Transactions: React.FC<Props> = (props) => {
             <div className={styles.greetingAndBell}>
               <span className={styles.greeting}>{userName ? `Hi, ${userName}!` : "Hi!"}</span>
 
-              <button className={styles.personalInfoButton} onClick={toggleUserProfile}>Personal Information</button>
+              {/* <button className={styles.personalInfoButton} onClick={toggleUserProfile}>Personal Information</button>
               <div className={`${styles.dropdownContent} ${showUserProfile ? styles.show : ''}`}>
                 <UserProfile accessToken={accessToken} />
-              </div>
+              </div> */}
             </div>
             <div className={styles.bellIcon} onClick={() => setNotificationsVisible(!notificationsVisible)}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
@@ -304,8 +312,39 @@ export const Transactions: React.FC<Props> = (props) => {
             </div>
           </div>
         </header>
-
-        <div className={styles.mainContent}>
+        <CreditCard 
+          totalSpending = {`$${totalSpending.toFixed(2)}`}
+          accountBalance = {`$${accountBalance ? accountBalance.toFixed(2) : "Loading..."}`}
+          userProfile = {<UserProfile accessToken={accessToken} />}
+        />
+        {/* <div className={styles.mainContent}>
+  <div className={styles.card} onClick={() => setCardFlipped(!cardFlipped)}>
+    <div className={`${styles.cardInner} ${cardFlipped ? 'flipped' : ''}`}>
+      <div className={styles.cardFront}>
+        <div className={styles.totalSpendingContainer}>
+          <span className={styles.totalSpendingLabel}>
+            Total spending in the last 30 days:
+          </span>
+          <span className={styles.totalSpending}>
+            ${totalSpending.toFixed(2)}
+          </span>
+        </div>
+        <div className={styles.accountBalanceContainer}>
+          <span className={styles.accountBalanceLabel}>
+            Total Account Balances:
+          </span>
+          <span className={styles.accountBalance}>
+            ${accountBalance ? accountBalance.toFixed(2) : "Loading..."}
+          </span>
+        </div>
+      </div>
+      <div className={styles.cardBack}>
+        <UserProfile accessToken={accessToken} />
+      </div>
+    </div>
+  </div>
+</div>               */}
+        {/* <div className={styles.mainContent}>
           <div className={styles.totalSpendingContainer}>
             <span className={styles.totalSpendingLabel}>Total spending in the last 30 days:</span>
             <span className={styles.totalSpending}>${totalSpending.toFixed(2)}</span>
@@ -314,7 +353,7 @@ export const Transactions: React.FC<Props> = (props) => {
             <span className={styles.accountBalanceLabel}>Total Account Balances:</span>
             <span className={styles.accountBalance}>${accountBalance ? accountBalance.toFixed(2) : "Loading..."}</span>
           </div>
-        </div>
+        </div> */}
 
         <div className={styles.graphContainer}>
           <div className={styles.graphContent}>

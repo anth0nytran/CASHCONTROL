@@ -6,6 +6,7 @@ import Items from "./Components/ProductTypes/Items";
 import Context from "./Context";
 
 import styles from "./App.module.scss";
+import { IonContent, IonPage } from "@ionic/react";
 
 const App = () => {
   const { linkSuccess, isItemAccess, isPaymentInitiation, dispatch } =
@@ -83,6 +84,8 @@ const App = () => {
   }, [dispatch, generateToken, getInfo]);
 
   return (
+    <IonPage>
+      <IonContent>
     <div className={styles.App}>
       <div className={styles.container}>
         <Header />
@@ -96,8 +99,11 @@ const App = () => {
             )}
           </>
         )}
+        
       </div>
     </div>
+    </IonContent>
+    </IonPage>
   );
 };
 
