@@ -1,4 +1,4 @@
-import { createContext, useReducer, Dispatch, ReactNode } from "react";
+import { createContext, useReducer, Dispatch, ReactNode ,  useEffect} from "react";
 
 interface QuickstartState {
   linkSuccess: boolean;
@@ -76,7 +76,21 @@ export const QuickstartProvider: React.FC<{ children: ReactNode }> = (
     }
   };
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    const storedState = localStorage.getItem("quickstartState");
+
+    if (storedState) {
+      dispatch({ type: "SET_STATE", state: JSON.parse(storedState) });
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("quickstartState", JSON.stringify(state));
+  }, [state]);
+
   return <Provider value={{ ...state, dispatch }}>{props.children}</Provider>;
 };
+
 
 export default Context;

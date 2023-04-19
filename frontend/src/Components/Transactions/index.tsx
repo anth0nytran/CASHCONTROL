@@ -5,6 +5,9 @@ import UserProfile from './UserProfile';
 import InvestmentTransactionList from "./InvestmentTransactionList";
 import './DropdownMenu.css';
 import styles from './Transactions.module.css';
+// import { VictoryBar, VictoryChart, VictoryAxis, VictoryTheme } from "victory";
+import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
+import MonthlySpendingPieChart from './MonthlySpendingPieChart';
 
 interface Props {
   token?: string | null;
@@ -340,7 +343,26 @@ return (
     </div>
 
     <div className={styles.graphContainer}>
-      {/* Insert your graph component here */}
+      <div className={styles.graphContent}>
+    <MonthlySpendingPieChart transactions={data} />
+  {/* <VictoryChart
+    domainPadding={20}
+    theme={VictoryTheme.material}
+  >
+    <VictoryAxis />
+    <VictoryAxis
+      dependentAxis
+      tickFormat={(x) => `$${x}`}
+    />
+    <VictoryBar
+      data={transformedData}
+      x="amount"
+      y="value"
+      style={{ data: { fill: "#1e6ba9" } }}
+    />
+  </VictoryChart> */}
+</div>
+      
     </div>
 
     <div className={styles.transactions}>

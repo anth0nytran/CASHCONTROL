@@ -365,3 +365,12 @@ font-weight: bold;
 .bellIcon:hover path {
   fill: var(--accent-color3);
 }
+
+.graphContent {
+  width: 100%;
+  height: 400px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
