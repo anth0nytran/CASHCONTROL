@@ -1,10 +1,10 @@
-// LineChartBalanceHistory.tsx
+
 import React, { useEffect, useState } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 interface TransactionData {
   date: string;
-  amount: number;
+  balance: number;
 }
 
 interface LineChartBalanceHistoryProps {
@@ -15,31 +15,41 @@ const LineChartBalanceHistory: React.FC<LineChartBalanceHistoryProps> = ({ trans
   const [transactionData, setTransactionData] = useState<TransactionData[]>([]);
 
   useEffect(() => {
-    const last30DaysData = transactions
+    const currentDate = new Date();
+    const thirtyDaysAgo = new Date(currentDate.setDate(currentDate.getDate() - 30));
+
+    const transactionsByDate = new Map<string, number>();
+
+    transactions
       .filter((transaction: any) => {
         const transactionDate = new Date(transaction.date);
-        const currentDate = new Date();
-        const thirtyDaysAgo = new Date(currentDate.setDate(currentDate.getDate() - 30));
         return transactionDate >= thirtyDaysAgo;
       })
-      .map((transaction: any) => {
-        return {
-          date: new Date(transaction.date).toLocaleDateString(),
-          amount: transaction.amount,
-        };
+      .forEach((transaction: any) => {
+        const dateString = new Date(transaction.date).toLocaleDateString();
+        const currentAmount = transactionsByDate.get(dateString) || 0;
+        transactionsByDate.set(dateString, currentAmount + transaction.amount * -1);
       });
+
+    let balance = 0;
+    const last30DaysData = Array.from(transactionsByDate.entries()).map(([date, amount]) => {
+      balance += amount;
+      return {
+        date,
+        balance,
+      };
+    });
 
     setTransactionData(last30DaysData);
   }, [transactions]);
 
   return (
-    <ResponsiveContainer width={500} height={300}>
+    // <ResponsiveContainer width={400} height={200}>
+    <ResponsiveContainer width="100%" height={250}>
       <LineChart
-        width={500}
-        height={300}
         data={transactionData}
         margin={{
-          top: 5,
+          top: 20,
           right: 30,
           left: 20,
           bottom: 5,
@@ -50,7 +60,7 @@ const LineChartBalanceHistory: React.FC<LineChartBalanceHistoryProps> = ({ trans
         <YAxis />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="amount" stroke="#8884d8" activeDot={{ r: 8 }} />
+        <Line type="monotone" dataKey="balance" stroke="#8884d8" activeDot={{ r: 8 }} />
       </LineChart>
     </ResponsiveContainer>
   );
