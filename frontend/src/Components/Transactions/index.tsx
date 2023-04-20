@@ -288,11 +288,6 @@ export const Transactions: React.FC<Props> = (props) => {
           <div className={styles.userControls}>
             <div className={styles.greetingAndBell}>
               <span className={styles.greeting}>{userName ? `Hi, ${userName}!` : "Hi!"}</span>
-
-              {/* <button className={styles.personalInfoButton} onClick={toggleUserProfile}>Personal Information</button>
-              <div className={`${styles.dropdownContent} ${showUserProfile ? styles.show : ''}`}>
-                <UserProfile accessToken={accessToken} />
-              </div> */}
             </div>
             <div className={styles.bellIcon} onClick={() => setNotificationsVisible(!notificationsVisible)}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">

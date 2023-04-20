@@ -14,3 +14,13 @@ $threads-font-path: "~plaid-threads/fonts";
   max-width: 115 * $unit;
   margin: 0 auto;
 }
+
+:root {
+  --ion-background-color: var(--background-color);
+  --ion-color-step-50: var(--background-color);
+}
+
+/* Add this class to your CSS */
+.ion_page {
+  background-color: var(--background-color);
+}
