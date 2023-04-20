@@ -53,8 +53,6 @@ const MonthlySpendingPieChart: React.FC<Props> = ({ transactions }) => {
       if (amount <= 0) {
         return;
       }
-
-
       if (categoriesMap.has(category)) {
         const currentAmount = categoriesMap.get(category) as number;
         categoriesMap.set(category, currentAmount + amount);

@@ -20,20 +20,21 @@ const CreditCard = ({ name = '', number = '', totalSpending = '', accountBalance
   return (
     <div className={styles.card_container}>
       <ReactCardFlip isFlipped={flipped}>
+        
         <IonCard className={styles.ionCard} onClick={handleClick}>
           <div className={styles.card_logo}></div>
           <div className={styles.card_chip}></div>
-          <IonCardTitle className="name-number">{number}</IonCardTitle>
+          <IonCardTitle className="name_number">{number}</IonCardTitle>
           <IonCardTitle>Total Spending (30d)</IonCardTitle>
-          <IonCardSubtitle className="total-spending">{totalSpending}</IonCardSubtitle>
-          <IonCardTitle className="total-balance">Total Balance</IonCardTitle>
-          <IonCardSubtitle className="total-balance">{accountBalance}</IonCardSubtitle>
+          <IonCardSubtitle className="total_spending">{totalSpending}</IonCardSubtitle>
+          <IonCardTitle className="total_balance">Total Balance</IonCardTitle>
+          <IonCardSubtitle className="total_balance">{accountBalance}</IonCardSubtitle>
         </IonCard>
 
         <IonCard className={styles.ionCard} onClick={handleClick}>
           <IonCardHeader>
             <IonCardTitle>Personal Information</IonCardTitle>
-            <IonCardSubtitle>{userProfile}</IonCardSubtitle>
+            <IonCardSubtitle className ="">{userProfile}</IonCardSubtitle>
           </IonCardHeader>
         </IonCard>
       </ReactCardFlip>
