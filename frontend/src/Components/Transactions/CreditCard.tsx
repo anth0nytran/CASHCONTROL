@@ -20,7 +20,6 @@ const CreditCard = ({ name = '', number = '', totalSpending = '', accountBalance
   return (
     <div className={styles.card_container}>
       <ReactCardFlip isFlipped={flipped}>
-        
         <IonCard className={styles.ionCard} onClick={handleClick}>
           <div className={styles.card_logo}></div>
           <div className={styles.card_chip}></div>

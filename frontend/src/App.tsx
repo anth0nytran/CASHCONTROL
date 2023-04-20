@@ -84,7 +84,7 @@ const App = () => {
   }, [dispatch, generateToken, getInfo]);
 
   return (
-    <IonPage>
+    <IonPage className ="ion_page">
     <IonContent>
     <div className={styles.App}>
       <div className={styles.container}>
