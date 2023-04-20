@@ -314,49 +314,13 @@ export const Transactions: React.FC<Props> = (props) => {
             </div>
           </div>
         </header>
+        <div className ={styles.cardWrapper}>
         <CreditCard 
           totalSpending = {`$${totalSpending.toFixed(2)}`}
           accountBalance = {`$${accountBalance ? accountBalance.toFixed(2) : "Loading..."}`}
           userProfile = {<UserProfile accessToken={accessToken} />}
         />
-        {/* <div className={styles.mainContent}>
-  <div className={styles.card} onClick={() => setCardFlipped(!cardFlipped)}>
-    <div className={`${styles.cardInner} ${cardFlipped ? 'flipped' : ''}`}>
-      <div className={styles.cardFront}>
-        <div className={styles.totalSpendingContainer}>
-          <span className={styles.totalSpendingLabel}>
-            Total spending in the last 30 days:
-          </span>
-          <span className={styles.totalSpending}>
-            ${totalSpending.toFixed(2)}
-          </span>
         </div>
-        <div className={styles.accountBalanceContainer}>
-          <span className={styles.accountBalanceLabel}>
-            Total Account Balances:
-          </span>
-          <span className={styles.accountBalance}>
-            ${accountBalance ? accountBalance.toFixed(2) : "Loading..."}
-          </span>
-        </div>
-      </div>
-      <div className={styles.cardBack}>
-        <UserProfile accessToken={accessToken} />
-      </div>
-    </div>
-  </div>
-</div>               */}
-        {/* <div className={styles.mainContent}>
-          <div className={styles.totalSpendingContainer}>
-            <span className={styles.totalSpendingLabel}>Total spending in the last 30 days:</span>
-            <span className={styles.totalSpending}>${totalSpending.toFixed(2)}</span>
-          </div>
-          <div className={styles.accountBalanceContainer}>
-            <span className={styles.accountBalanceLabel}>Total Account Balances:</span>
-            <span className={styles.accountBalance}>${accountBalance ? accountBalance.toFixed(2) : "Loading..."}</span>
-          </div>
-        </div> */}
-
         <div className={styles.graphContainer}>
           <div className={styles.graphContent}>
             <MonthlySpendingPieChart transactions={data} />
