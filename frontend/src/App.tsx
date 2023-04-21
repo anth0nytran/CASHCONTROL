@@ -8,6 +8,12 @@ import Context from "./Context";
 import styles from "./App.module.scss";
 import { IonContent, IonPage } from "@ionic/react";
 
+import ParticlesBackground from "./Components/ParticlesBackground";
+
+import {Particles} from "react-tsparticles";
+
+
+
 const App = () => {
   const { linkSuccess, isItemAccess, isPaymentInitiation, dispatch } =
     useContext(Context);
@@ -83,12 +89,15 @@ const App = () => {
     init();
   }, [dispatch, generateToken, getInfo]);
 
+ 
   return (
     <IonPage className ="ion_page">
     <IonContent>
+    {!linkSuccess && <ParticlesBackground/>}
     <div className={styles.App}>
       <div className={styles.container}>
-        <Header />
+      <div className={styles.contentWrapper}>
+        {!linkSuccess && <Header />}
         {linkSuccess && (
           <>
             {isPaymentInitiation && <Products />}
@@ -99,7 +108,7 @@ const App = () => {
             )}
           </>
         )}
-        
+        </div>
       </div>
     </div>
     </IonContent>

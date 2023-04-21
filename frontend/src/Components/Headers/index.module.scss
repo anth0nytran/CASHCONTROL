@@ -1,11 +1,22 @@
 @import "~plaid-threads/scss/variables";
 
+.container{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .grid {
-  width: 100%;
+  width: 400px;
   display: flex;
   flex-direction: column;
-  margin: auto;
   margin-bottom: 2 * $unit;
+  background-color: #2c3e50;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .title {
@@ -13,11 +24,16 @@
   margin-bottom: 0;
   font-weight: 800;
   height: 6 * $unit;
+  text-emphasis-color: #3c9f50;
+  color: darkgreen;
+  font-weight: bold;
 }
 
 .subtitle {
   margin-top: 0;
   margin-bottom: 3 * $unit;
+  font-weight: bold;
+  color: darkgreen;
 }
 
 .introPar {
@@ -28,6 +44,12 @@
 
 .linkButton {
   margin-top: 3 * $unit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
 }
 
 .itemAccessContainer {

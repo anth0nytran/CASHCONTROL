@@ -20,7 +20,9 @@ const Header = () => {
     isPaymentInitiation,
   } = useContext(Context);
 
+
   return (
+    <div className={styles.container}>
     <div className={styles.grid}>
 
       {!linkSuccess ? (
@@ -35,17 +37,17 @@ const Header = () => {
               <code>PLAID_CLIENT_ID</code> and <code>PLAID_SECRET</code>.
             </Callout>
           ) : /* message if backend is running and there is no link token */
-          linkToken == null && backend ? null : linkToken === "" ? (
-            <div className={styles.linkButton}>
-              <Button large disabled>
-                Loading...
-              </Button>
-            </div>
-          ) : (
-            <div className={styles.linkButton}>
-              <Link />
-            </div>
-          )}
+            linkToken == null && backend ? null : linkToken === "" ? (
+              <div className={styles.linkButton}>
+                <Button large disabled>
+                  Loading...
+                </Button>
+              </div>
+            ) : (
+              <div className={styles.linkButton}>
+                <Link />
+              </div>
+            )}
         </>
       ) : (
         <>
@@ -86,6 +88,7 @@ const Header = () => {
           )}
         </>
       )}
+    </div>
     </div>
   );
 };
