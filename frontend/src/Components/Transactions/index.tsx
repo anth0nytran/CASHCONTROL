@@ -16,6 +16,17 @@ import "@ionic/react/css/normalize.css";
 import "@ionic/react/css/structure.css";
 import "@ionic/react/css/typography.css";
 
+import {
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonGrid,
+  IonRow,
+  IonCol,
+} from '@ionic/react';
+
+
 
 interface Props {
   token?: string | null;
@@ -184,6 +195,7 @@ export const Transactions: React.FC<Props> = (props) => {
 
   //total spending in 30 days
   const [totalSpending, setTotalSpending] = useState<number>(0);
+  
   useEffect(() => {
     const getData = async () => {
       const response = await fetch("/api/transactions", {
@@ -309,24 +321,54 @@ export const Transactions: React.FC<Props> = (props) => {
             </div>
           </div>
         </header>
-        <div className ={styles.cardWrapper}>
-        <CreditCard 
-          totalSpending = {`$${totalSpending.toFixed(2)}`}
-          accountBalance = {`$${accountBalance ? accountBalance.toFixed(2) : "Loading..."}`}
-          userProfile = {<UserProfile accessToken={accessToken} />}
-        />
+        <IonCard className={styles.cardWrapper}>
+          <IonCardContent>
+            <CreditCard
+              totalSpending={`$${totalSpending.toFixed(2)}`}
+              accountBalance={`$${accountBalance ? accountBalance.toFixed(2) : "Loading..."}`}
+              userProfile={<UserProfile accessToken={accessToken} />}
+            />
+          </IonCardContent>
+        </IonCard>
+        <div className={styles.graphTitles}>
+          <h3 className={styles.leftTitle}>Monthly Expenses</h3>
+          <h3 className={styles.rightTitle}>Balance History (30d)</h3>
         </div>
         <div className={styles.graphContainer}>
-          <div className={styles.graphContent}>
-            <MonthlySpendingPieChart transactions={data} />
-          </div>
-          <div className={styles.lineChartContainer}>
+          <MonthlySpendingPieChart transactions={data} />
           {/* <LineChart30Days /> */}
-          <LineChartBalanceHistory transactions = {data}/>
-          </div>
+          <LineChartBalanceHistory transactions={data} />
         </div>
 
-        <div className={styles.transactions}>
+        <IonCard className={styles.transactions}>
+  <IonCardHeader>
+    <IonCardTitle>Transaction History</IonCardTitle>
+  </IonCardHeader>
+  <IonCardContent>
+    <div className={styles.container}>
+      <div className={styles.headers}>
+        <strong>Date</strong>
+        <strong>Name</strong>
+        <strong>Amount</strong>
+        <strong>Category</strong>
+      </div>
+      {data.map((item: Transaction, index: number) => {
+        const itemAmountStyle = {
+          color: item.amount > 0 ? 'red' : 'green',
+        };
+        return (
+          <div key={index} className={styles.transactionCard}>
+            <p>{item.date}</p>
+            <p>{item.name}</p>
+            <p style={itemAmountStyle}>{(item.amount * -1).toFixed(2)}</p>
+            <p>{item.category.join(", ")}</p>
+          </div>
+        );
+      })}
+    </div>
+  </IonCardContent>
+</IonCard>
+        {/* <div className={styles.transactions}>
           <h2>Transaction History</h2>
           <div className={styles.container}>
             <div className={styles.headers}>
@@ -335,51 +377,178 @@ export const Transactions: React.FC<Props> = (props) => {
               <strong>Amount</strong>
               <strong>Category</strong>
             </div>
-              
+
             {data.map((item: Transaction, index: number) => {
               const itemAmountStyle = {
                 color: item.amount > 0 ? 'red' : 'green',
               };
-              return(
-              <div key={index} className={styles.transactionCard}>
-              <p>{item.date}</p>
-              <p>{item.name}</p>
-              <p style={itemAmountStyle}>{(item.amount * -1).toFixed(2)}</p>
-              <p>{item.category.join(", ")}</p>
-            </div>
-            );
-          })}
-          </div>
-        </div>
-
-        <div className={styles.bills}>
-          <h2>Bills</h2>
-          <div className={styles.container}>
-            <div className={styles.headers}>
-              <strong>Date</strong>
-              <strong>Description</strong>
-              <strong>Amount</strong>
-              <strong>Frequency</strong>
-            </div>
-            {recurringTransactions?.map((item: RecurringTransaction, index: number) => {
-              const itemAmountStyle = {
-                color: item.average_amount.amount > 0 ? 'red' : 'green',
-              };
-              return(
-              <div key={index} className={styles.transactionCard}>
-                <p>{item.last_date}</p>
-                <p>{item.description}</p>
-                <p style={itemAmountStyle}>{(item.average_amount.amount * -1).toFixed(2)}</p>
-                <p>{item.frequency}</p>
-              </div>
+              return (
+                <div key={index} className={styles.transactionCard}>
+                  <p>{item.date}</p>
+                  <p>{item.name}</p>
+                  <p style={itemAmountStyle}>{(item.amount * -1).toFixed(2)}</p>
+                  <p>{item.category.join(", ")}</p>
+                </div>
               );
-          })}
+            })}
           </div>
-        </div>
-        <div className={styles.investments}>
-          <InvestmentTransactionList token={accessToken} />
-        </div>
+        </div> */}
+
+        <IonCard className={styles.bills}>
+          <IonCardHeader>
+            <IonCardTitle>Bills</IonCardTitle>
+          </IonCardHeader>
+          <IonCardContent>
+            <div className={styles.container}>
+              <div className={styles.headers}>
+                <strong>Date</strong>
+                <strong>Description</strong>
+                <strong>Amount</strong>
+                <strong>Frequency</strong>
+              </div>
+              {recurringTransactions?.map((item: RecurringTransaction, index: number) => {
+                const itemAmountStyle = {
+                  color: item.average_amount.amount > 0 ? 'red' : 'green',
+                };
+                return (
+                  <div key={index} className={styles.transactionCard}>
+                    <p>{item.last_date}</p>
+                    <p>{item.description}</p>
+                    <p style={itemAmountStyle}>{(item.average_amount.amount * -1).toFixed(2)}</p>
+                    <p>{item.frequency}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </IonCardContent>
+        </IonCard>
+        <IonCard className={styles.investments}>
+          <IonCardHeader>
+            <IonCardTitle>Investments</IonCardTitle>
+          </IonCardHeader>
+          <IonCardContent>
+            <InvestmentTransactionList token={accessToken} />
+          </IonCardContent>
+        </IonCard>
       </div>
     </>
   );
 }
+
+//trying to add modernisitic ionic componenets above^
+// return (
+//   <>
+//     {showTermsModal && (
+//       <div className={styles.termsModal}>
+//         <div className={styles.modalContent}>
+//           <h3>Terms and Conditions</h3>
+//           <p>Please read and accept our terms and conditions to use the application.</p>
+//           {/* Add the actual content of your terms and conditions here */}
+//           <button onClick={handleAcceptTermsConditions}>Accept</button>
+//         </div>
+//       </div>
+//     )}
+//     <div className={styles.container}>
+//       <header className={styles.header}>
+//         <div className={styles.logoAndSlogan}>
+//           <span className={styles.logo}>Cash Control</span>
+//           <span className={styles.slogan}>Control your finances with us!</span>
+//         </div>
+//         <div className={styles.userControls}>
+//           <div className={styles.greetingAndBell}>
+//             <span className={styles.greeting}>{userName ? `Hi, ${userName}!` : "Hi!"}</span>
+//           </div>
+//           <div className={styles.bellIcon} onClick={() => setNotificationsVisible(!notificationsVisible)}>
+//             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+//               <path d="M12 2C9.243 2 7 4.243 7 7v5.586l-.707.707A.996.996 0 006 14v2c0 .552.448 1 1 1h9c.552 0 1-.448 1-1v-2c0-.379-.214-.725-.553-.895l-.004-.002-.006-.003-.01-.005-.018-.01a.955.955 0 00-.31-.182l-.023-.012a1.02 1.02 0 00-.07-.037l-.024-.012-.007-.003-.002-.001-.707-.293V7c0-2.757-2.243-5-5-5zm0 21c-1.654 0-3-1.346-3-3h6c0 1.654-1.346 3-3 3z" />
+//             </svg>
+//             {notificationsVisible && (
+//               <div className={`${styles.dropdown} ${notificationsVisible ? styles.show : ''}`}>
+//                 <div className={styles.notificationList}>
+//                   {notifications.slice(0, 30).map((notification, index) => (
+//                     <Notification
+//                       key={index}
+//                       type={notification.type}
+//                       message={notification.message}
+//                     />
+//                   ))}
+//                 </div>
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       </header>
+//       <div className ={styles.cardWrapper}>
+//       <CreditCard 
+//         totalSpending = {`$${totalSpending.toFixed(2)}`}
+//         accountBalance = {`$${accountBalance ? accountBalance.toFixed(2) : "Loading..."}`}
+//         userProfile = {<UserProfile accessToken={accessToken} />}
+//       />
+//       </div>
+//       <div className={styles.graphContainer}>
+//         <div className={styles.graphContent}>
+//           <MonthlySpendingPieChart transactions={data} />
+//         </div>
+//         <div className={styles.lineChartContainer}>
+//         {/* <LineChart30Days /> */}
+//         <LineChartBalanceHistory transactions = {data}/>
+//         </div>
+//       </div>
+
+//       <div className={styles.transactions}>
+//         <h2>Transaction History</h2>
+//         <div className={styles.container}>
+//           <div className={styles.headers}>
+//             <strong>Date</strong>
+//             <strong>Name</strong>
+//             <strong>Amount</strong>
+//             <strong>Category</strong>
+//           </div>
+            
+//           {data.map((item: Transaction, index: number) => {
+//             const itemAmountStyle = {
+//               color: item.amount > 0 ? 'red' : 'green',
+//             };
+//             return(
+//             <div key={index} className={styles.transactionCard}>
+//             <p>{item.date}</p>
+//             <p>{item.name}</p>
+//             <p style={itemAmountStyle}>{(item.amount * -1).toFixed(2)}</p>
+//             <p>{item.category.join(", ")}</p>
+//           </div>
+//           );
+//         })}
+//         </div>
+//       </div>
+
+//       <div className={styles.bills}>
+//         <h2>Bills</h2>
+//         <div className={styles.container}>
+//           <div className={styles.headers}>
+//             <strong>Date</strong>
+//             <strong>Description</strong>
+//             <strong>Amount</strong>
+//             <strong>Frequency</strong>
+//           </div>
+//           {recurringTransactions?.map((item: RecurringTransaction, index: number) => {
+//             const itemAmountStyle = {
+//               color: item.average_amount.amount > 0 ? 'red' : 'green',
+//             };
+//             return(
+//             <div key={index} className={styles.transactionCard}>
+//               <p>{item.last_date}</p>
+//               <p>{item.description}</p>
+//               <p style={itemAmountStyle}>{(item.average_amount.amount * -1).toFixed(2)}</p>
+//               <p>{item.frequency}</p>
+//             </div>
+//             );
+//         })}
+//         </div>
+//       </div>
+//       <div className={styles.investments}>
+//         <InvestmentTransactionList token={accessToken} />
+//       </div>
+//     </div>
+//   </>
+// );
+// }

@@ -60,7 +60,7 @@ const LineChartBalanceHistory: React.FC<LineChartBalanceHistoryProps> = ({ trans
         <YAxis />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="balance" stroke="#8884d8" activeDot={{ r: 8 }} />
+        <Line type="monotone" dataKey="balance" stroke="#3c9f50" activeDot={{ r: 8 }} />
       </LineChart>
     </ResponsiveContainer>
   );
