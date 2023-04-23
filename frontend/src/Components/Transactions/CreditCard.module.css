@@ -20,9 +20,9 @@
     position: absolute;
     top: 16px;
     right: 16px;
-    width: 48px;
-    height: 48px;
-    background-image: url("./Images/master_card.png");
+    width: 80px;
+    height: 80px;
+    background-image: url("./Images/cashcontrollogo.png");
     background-repeat: no-repeat;
     background-size: contain;
 }

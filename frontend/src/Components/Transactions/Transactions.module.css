@@ -126,6 +126,7 @@ body {
   z-index: 1000;
 }
 
+
 .modalContent {
   background-color: #2b2b2b;
   color: #f5f5f5;
@@ -289,6 +290,27 @@ body {
   justify-content: center;
 }
 
+.scrollableNotificationList {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.scrollableNotificationList::-webkit-scrollbar {
+  width: 8px;
+  background-color: #F5F5F5;
+}
+
+.scrollableNotificationList::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #2c7a3e;
+  background-clip: content-box;
+  border: 2px solid transparent;
+}
+
+.scrollableNotificationList::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
 .userControls {
   display: flex;
   flex-direction: column;

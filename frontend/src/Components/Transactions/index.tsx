@@ -15,7 +15,7 @@ import "@ionic/react/css/core.css";
 import "@ionic/react/css/normalize.css";
 import "@ionic/react/css/structure.css";
 import "@ionic/react/css/typography.css";
-import { IonModal, IonContent, IonButton, IonLabel, IonCheckbox, IonItem, IonList, } from '@ionic/react';
+import { IonModal, IonContent, IonButton, IonLabel, IonCheckbox, IonItem, IonList, IonBadge, IonPopover} from '@ionic/react';
 
 import {
   IonCard,
@@ -135,8 +135,27 @@ export const Transactions: React.FC<Props> = (props) => {
     message: string;
   }
 
+  type CustomMouseEvent = MouseEvent & {
+    currentTarget: {
+      getBoundingClientRect(): DOMRect;
+    };
+  };
+
+  const handleNotificationsClick = (
+    event: React.MouseEvent<HTMLIonBadgeElement, CustomMouseEvent>
+  ) => {
+    setNotificationsVisible({ open: !notificationsVisible.open, event: event.nativeEvent });
+  };
+
   const [notifications, setNotifications] = useState<NotificationData[]>([]);
-  const [notificationsVisible, setNotificationsVisible] = useState(false);
+
+  const [notificationsVisible, setNotificationsVisible] = useState<{
+    open: boolean;
+    event: CustomMouseEvent | undefined | React.MouseEvent<HTMLIonBadgeElement, CustomMouseEvent>;
+  }>({
+    open: false,
+    event: undefined,
+  });
 
   useEffect(() => {
     const fetchTransactionsUpdates = async () => {
@@ -155,11 +174,11 @@ export const Transactions: React.FC<Props> = (props) => {
         const newNotifications = [
           ...transactionUpdates.added.map((txn: any) => ({
             type: 'new',
-            message: `New transaction: ${txn.name} - ${txn.amount}`,
+            message: `New transaction: ${txn.name}: ${txn.amount * - 1 }`,
           })),
           ...transactionUpdates.modified.map((txn: any) => ({
             type: 'modified',
-            message: `Modified transaction: ${txn.name} - ${txn.amount}`,
+            message: `Modified transaction: ${txn.name} - ${txn.amount * - 1}`,
           })),
           ...transactionUpdates.removed.map((txnId: any) => ({
             type: 'removed',
@@ -168,15 +187,16 @@ export const Transactions: React.FC<Props> = (props) => {
         ];
 
         setNotifications((prevNotifications) => [
-          ...prevNotifications,
           ...newNotifications,
         ]);
+
       } else {
         console.error('Failed to fetch transaction updates.');
       }
     };
 
     if (accessToken) {
+      fetchTransactionsUpdates();
       const intervalId = setInterval(fetchTransactionsUpdates, 30000); // Poll every 30 seconds
       return () => clearInterval(intervalId);
     }
@@ -318,7 +338,7 @@ export const Transactions: React.FC<Props> = (props) => {
                   </IonItem>
                   <IonItem>
                     <IonLabel>Governing Law:</IonLabel>
-                    <p>These terms and conditions are governed by the laws of the state of California.</p>
+                    <p>These terms and conditions are governed by the laws of the state of Texas.</p>
                   </IonItem>
                   <IonItem>
                     <IonLabel>Changes to these Terms:</IonLabel>
@@ -334,7 +354,7 @@ export const Transactions: React.FC<Props> = (props) => {
             onClick={handleAcceptTermsConditions}
             className={styles.acceptButton}
           >
-            Accept
+            I Accept The Terms And Conditions.
           </IonButton>
         </IonModal>
       )}
@@ -344,28 +364,27 @@ export const Transactions: React.FC<Props> = (props) => {
             <span className={styles.logo}>Cash Control</span>
             <span className={styles.slogan}>Control your finances with us!</span>
           </div>
-          <div className={styles.userControls}>
-            <div className={styles.greetingAndBell}>
-            </div>
-            <div className={styles.bellIcon} onClick={() => setNotificationsVisible(!notificationsVisible)}>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                <path d="M12 2C9.243 2 7 4.243 7 7v5.586l-.707.707A.996.996 0 006 14v2c0 .552.448 1 1 1h9c.552 0 1-.448 1-1v-2c0-.379-.214-.725-.553-.895l-.004-.002-.006-.003-.01-.005-.018-.01a.955.955 0 00-.31-.182l-.023-.012a1.02 1.02 0 00-.07-.037l-.024-.012-.007-.003-.002-.001-.707-.293V7c0-2.757-2.243-5-5-5zm0 21c-1.654 0-3-1.346-3-3h6c0 1.654-1.346 3-3 3z" />
-              </svg>
-              {notificationsVisible && (
-                <div className={`${styles.dropdown} ${notificationsVisible ? styles.show : ''}`}>
-                  <div className={styles.notificationList}>
-                    {notifications.slice(0, 30).map((notification, index) => (
-                      <Notification
-                        key={index}
-                        type={notification.type}
-                        message={notification.message}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
+          <IonBadge color="danger" onClick={handleNotificationsClick}>
+           <span style={{color: '#FFFFF'}}>Notifications ({notifications.length})</span>
+          </IonBadge>
+          <IonPopover
+            isOpen={notificationsVisible.open}
+            onDidDismiss={() => setNotificationsVisible({ open: false, event: undefined })}
+            event={notificationsVisible.event as Event}
+            cssClass="popover-notification"
+          >
+            <IonContent>
+              <div className={`${styles.notificationList} ${styles.scrollableNotificationList}`}>
+                {notifications.slice(0, 30).map((notification, index) => (
+                  <Notification
+                    key={index}
+                    type={notification.type}
+                    message={notification.message}
+                  />
+                ))}
+              </div>
+            </IonContent>
+          </IonPopover>
         </header>
         <IonCard className={styles.cardWrapper}>
           <IonCardContent>
@@ -382,64 +401,37 @@ export const Transactions: React.FC<Props> = (props) => {
         </div>
         <div className={styles.graphContainer}>
           <MonthlySpendingPieChart transactions={data} />
-          {/* <LineChart30Days /> */}
           <LineChartBalanceHistory transactions={data} />
         </div>
 
         <IonCard className={styles.transactions}>
-  <IonCardHeader>
-    <IonCardTitle>Transaction History</IonCardTitle>
-  </IonCardHeader>
-  <IonCardContent>
-    <div className={styles.container}>
-      <div className={styles.headers}>
-        <strong>Date</strong>
-        <strong>Name</strong>
-        <strong>Amount</strong>
-        <strong>Category</strong>
-      </div>
-      {data.map((item: Transaction, index: number) => {
-        const itemAmountStyle = {
-          color: item.amount > 0 ? 'red' : 'green',
-        };
-        return (
-          <div key={index} className={styles.transactionCard}>
-            <p>{item.date}</p>
-            <p>{item.name}</p>
-            <p style={itemAmountStyle}>{(item.amount * -1).toFixed(2)}</p>
-            <p>{item.category.join(", ")}</p>
-          </div>
-        );
-      })}
-    </div>
-  </IonCardContent>
-</IonCard>
-        {/* <div className={styles.transactions}>
-          <h2>Transaction History</h2>
-          <div className={styles.container}>
-            <div className={styles.headers}>
-              <strong>Date</strong>
-              <strong>Name</strong>
-              <strong>Amount</strong>
-              <strong>Category</strong>
+          <IonCardHeader>
+            <IonCardTitle>Transaction History</IonCardTitle>
+          </IonCardHeader>
+          <IonCardContent>
+            <div className={styles.container}>
+              <div className={styles.headers}>
+                <strong>Date</strong>
+                <strong>Name</strong>
+                <strong>Amount</strong>
+                <strong>Category</strong>
+              </div>
+              {data.map((item: Transaction, index: number) => {
+                const itemAmountStyle = {
+                  color: item.amount > 0 ? 'red' : 'green',
+                };
+                return (
+                  <div key={index} className={styles.transactionCard}>
+                    <p>{item.date}</p>
+                    <p>{item.name}</p>
+                    <p style={itemAmountStyle}>{(item.amount * -1).toFixed(2)}</p>
+                    <p>{item.category.join(", ")}</p>
+                  </div>
+                );
+              })}
             </div>
-
-            {data.map((item: Transaction, index: number) => {
-              const itemAmountStyle = {
-                color: item.amount > 0 ? 'red' : 'green',
-              };
-              return (
-                <div key={index} className={styles.transactionCard}>
-                  <p>{item.date}</p>
-                  <p>{item.name}</p>
-                  <p style={itemAmountStyle}>{(item.amount * -1).toFixed(2)}</p>
-                  <p>{item.category.join(", ")}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div> */}
-
+          </IonCardContent>
+        </IonCard>
         <IonCard className={styles.bills}>
           <IonCardHeader>
             <IonCardTitle>Bills</IonCardTitle>

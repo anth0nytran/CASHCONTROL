@@ -28,7 +28,7 @@ const Header = () => {
       {!linkSuccess ? (
         <>
           <h3 className={styles.title}>CashControl</h3>
-          <h4 className={styles.subtitle}>All of your financial needs</h4>
+          <h2></h2>
           {/* message if backend is not running and there is no link token */}
           {!backend ? (
             <Callout warning>
