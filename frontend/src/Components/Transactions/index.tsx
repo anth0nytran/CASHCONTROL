@@ -15,6 +15,7 @@ import "@ionic/react/css/core.css";
 import "@ionic/react/css/normalize.css";
 import "@ionic/react/css/structure.css";
 import "@ionic/react/css/typography.css";
+import { IonModal, IonContent, IonButton, IonLabel, IonCheckbox, IonItem, IonList, } from '@ionic/react';
 
 import {
   IonCard,
@@ -67,12 +68,11 @@ export const Transactions: React.FC<Props> = (props) => {
 
   //  start of terms and agreements + name
 
-  const [nameInput, setNameInput] = useState('');
+
   const {
     accessToken,
     showTermsConditions,
     acceptedTermsConditions,
-    userName,
     dispatch,
   } = useContext(Context);
 
@@ -83,16 +83,7 @@ export const Transactions: React.FC<Props> = (props) => {
     setShowTermsModal(false);
   };
 
-  const handleNameInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNameInput(e.target.value);
-  };
 
-  const handleSetName = () => {
-    if (nameInput && !acceptedTermsConditions) {
-      dispatch({ type: 'SET_STATE', state: { userName: nameInput, acceptedTermsConditions: true } });
-      setNameInput('');
-    }
-  };
   //end of terms and agreements + name
 
   // Start of account balance:
@@ -282,14 +273,70 @@ export const Transactions: React.FC<Props> = (props) => {
   return (
     <>
       {showTermsModal && (
-        <div className={styles.termsModal}>
-          <div className={styles.modalContent}>
-            <h3>Terms and Conditions</h3>
-            <p>Please read and accept our terms and conditions to use the application.</p>
-            {/* Add the actual content of your terms and conditions here */}
-            <button onClick={handleAcceptTermsConditions}>Accept</button>
-          </div>
-        </div>
+        <IonModal isOpen={showTermsModal} backdropDismiss={false} cssClass={styles.termsModal}>
+          <IonContent className={`${styles.modalContent} custom-ion-content`}>
+            <div className={styles.contentWrapper}>
+              <h3>Terms and Conditions</h3>
+              <p >Please read and accept our terms and conditions to use the application.</p>
+              <div className={styles.scrollableContainer}>
+              <IonList>
+                  <IonItem>
+                    <IonLabel>Use of Services:</IonLabel>
+                    <p>Cash Control is a tool to help you manage your finances. It is intended for personal use only.</p>
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel>Account Information:</IonLabel>
+                    <p>To use Cash Control, you will need to provide us with access to your financial accounts. We will keep your information confidential and secure.</p>
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel>Third-Party Links:</IonLabel>
+                    <p>Cash Control may link to external websites for your convenience. We are not responsible for the content or security of those sites.</p>
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel>Security:</IonLabel>
+                    <p>We use industry-standard security measures to protect your account information, but we cannot guarantee the security of your data.</p>
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel>Your Responsibilities:</IonLabel>
+                    <p>You are responsible for maintaining the confidentiality of your login information and for complying with all applicable laws and regulations.</p>
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel>Modifications and Termination:</IonLabel>
+                    <p>Cash Control may modify or discontinue our services at any time without notice.</p>
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel>Intellectual Property:</IonLabel>
+                    <p>All content on Cash Control is protected by copyright and other intellectual property laws.</p>
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel>Disclaimer of Warranties:</IonLabel>
+                    <p>Cash Control provides its services "as is" and without any warranty or representation.</p>
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel>Limitation of Liability:</IonLabel>
+                    <p>Cash Control and its affiliates will not be liable for any damages arising out of or in connection with your use of our services.</p>
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel>Governing Law:</IonLabel>
+                    <p>These terms and conditions are governed by the laws of the state of California.</p>
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel>Changes to these Terms:</IonLabel>
+                    <p>Cash Control reserves the right to modify these terms and conditions at any time.</p>
+                  </IonItem>
+                </IonList>
+                By using Cash Control, you agree to these terms and conditions. If you do not agree to these terms, please do not use our application
+              </div>
+            </div>
+          </IonContent>
+          <IonButton
+            expand="full"
+            onClick={handleAcceptTermsConditions}
+            className={styles.acceptButton}
+          >
+            Accept
+          </IonButton>
+        </IonModal>
       )}
       <div className={styles.container}>
         <header className={styles.header}>
@@ -299,7 +346,6 @@ export const Transactions: React.FC<Props> = (props) => {
           </div>
           <div className={styles.userControls}>
             <div className={styles.greetingAndBell}>
-              <span className={styles.greeting}>{userName ? `Hi, ${userName}!` : "Hi!"}</span>
             </div>
             <div className={styles.bellIcon} onClick={() => setNotificationsVisible(!notificationsVisible)}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
