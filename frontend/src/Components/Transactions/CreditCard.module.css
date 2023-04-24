@@ -28,36 +28,62 @@
 }
 
 .card_chip {
-    margin-top: 10px;
-    width: 40px;
-    height: 40px;
-    background-image: url("./Images/card_chip.png");
-    background-repeat: no-repeat;
-    background-size: contain;
+  margin-top: 10px;
+  width: 40px;
+  height: 40px;
+  background-image: url("./Images/card_chip.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
 }
-
 .name_number {
     font-size: 14px;
     letter-spacing: 2px;
 }
 
 .card_info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: #ffffff;
-  }
-  
-  .total_spending_label,
-  .total_balance_label {
-    font-size: 0.8em;
-    margin-top: 5px;
-  }
-  
-  .total_spending,
-  .total_balance {
-    letter-spacing: .456rem;
-    margin-top: 10px;
-    font-size: 1.2em;
-    font-family: "Courier New", monospace;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ffffff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.card_numbers {
+  display: flex;
+  gap: 16px;
+}
+
+.card_labels {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 5px;
+}
+
+.total_spending_label,
+.total_balance_label {
+  font-size: 0.8em;
+  margin: 0;
+}
+.fine_print {
+  position: absolute;
+  bottom: 8px;
+  font-size: 0.7em;
+  opacity: 0.8;
+}
+.total_spending,
+.total_balance {
+  letter-spacing: .456rem;
+  margin: 0;
+  font-size: 1.2em;
+  font-family: "Courier New", monospace;
+}
+
+

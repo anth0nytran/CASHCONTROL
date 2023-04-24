@@ -25,10 +25,14 @@ const CreditCard = ({ name = '', number = '', totalSpending = '', accountBalance
         <div className={styles.card_chip}></div>
         <IonCardTitle className={styles.name_number}>{number}</IonCardTitle>
         <div className={styles.card_info}>
-          <IonCardSubtitle className={styles.total_spending}>{totalSpending}</IonCardSubtitle>
-          <IonCardTitle className={styles.total_spending_label}>Total Spending (30d)</IonCardTitle>
-          <IonCardSubtitle className={styles.total_balance}>{accountBalance}</IonCardSubtitle>
-          <IonCardTitle className={styles.total_balance_label}>Total Balance</IonCardTitle>
+          <div className={styles.card_numbers}>
+            <IonCardSubtitle className={styles.total_spending}>{totalSpending}</IonCardSubtitle>
+            <IonCardSubtitle className={styles.total_balance}>{accountBalance}</IonCardSubtitle>
+          </div>
+          <div className={styles.card_labels}>
+            <IonCardTitle className={styles.total_spending_label}>Total Spending (30d)</IonCardTitle>
+            <IonCardTitle className={styles.total_balance_label}>Total Balance</IonCardTitle>
+          </div>
         </div>
       </IonCard>
 
