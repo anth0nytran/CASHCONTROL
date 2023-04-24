@@ -19,16 +19,18 @@ const CreditCard = ({ name = '', number = '', totalSpending = '', accountBalance
 
   return (
     <div className={styles.card_container}>
-      <ReactCardFlip isFlipped={flipped}>
-        <IonCard className={styles.ionCard} onClick={handleClick}>
-          <div className={styles.card_logo}></div>
-          <div className={styles.card_chip}></div>
-          <IonCardTitle className="name_number">{number}</IonCardTitle>
-          <IonCardTitle>Total Spending (30d)</IonCardTitle>
-          <IonCardSubtitle className="total_spending">{totalSpending}</IonCardSubtitle>
-          <IonCardTitle className="total_balance">Total Balance</IonCardTitle>
-          <IonCardSubtitle className="total_balance">{accountBalance}</IonCardSubtitle>
-        </IonCard>
+    <ReactCardFlip isFlipped={flipped}>
+      <IonCard className={styles.ionCard} onClick={handleClick}>
+        <div className={styles.card_logo}></div>
+        <div className={styles.card_chip}></div>
+        <IonCardTitle className={styles.name_number}>{number}</IonCardTitle>
+        <div className={styles.card_info}>
+          <IonCardSubtitle className={styles.total_spending}>{totalSpending}</IonCardSubtitle>
+          <IonCardTitle className={styles.total_spending_label}>Total Spending (30d)</IonCardTitle>
+          <IonCardSubtitle className={styles.total_balance}>{accountBalance}</IonCardSubtitle>
+          <IonCardTitle className={styles.total_balance_label}>Total Balance</IonCardTitle>
+        </div>
+      </IonCard>
 
         <IonCard className={styles.ionCard} onClick={handleClick}>
           <IonCardHeader>

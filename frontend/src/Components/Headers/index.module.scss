@@ -10,15 +10,64 @@
 
 .grid {
   width: 400px;
+  height: 250px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 2 * $unit;
-  background-color: rgba(0, 100, 0, 0.8); /* 0.8 represents 80% opacity */
+  background-color: rgba(0, 100, 0, 0.8); 
   padding: 12px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  position: relative;
 }
 
+.cardNumber {
+  position: absolute;
+  left: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5em;
+  font-family: "Courier New", monospace;
+  color: #ffffff;
+}
+
+.logo {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 125px;
+  height: 125px;
+  background-image: url("./Images/cashcontrollogo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.chip {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 50px;
+  height: 40px;
+  transform: translateY(-50%);
+  background-image: url("./Images/card_chip.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.linkButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  position: absolute;
+  bottom: 12px;
+  border-radius: 10px;
+}
+.customLinkButton button {
+  border-radius: 10px;
+}
 .title {
   margin-top: 9 * $unit;
   margin-bottom: 0;
@@ -40,16 +89,6 @@
   width: 100%;
   font-size: 2 * $unit;
   margin: 2 * $unit 0;
-}
-
-.linkButton {
-  margin-top: 3 * $unit;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
 }
 
 .itemAccessContainer {

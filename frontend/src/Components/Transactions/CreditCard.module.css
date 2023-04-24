@@ -41,8 +41,23 @@
     letter-spacing: 2px;
 }
 
-.total_spending,
-.total_balance {
+.card_info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #ffffff;
+  }
+  
+  .total_spending_label,
+  .total_balance_label {
+    font-size: 0.8em;
+    margin-top: 5px;
+  }
+  
+  .total_spending,
+  .total_balance {
     letter-spacing: .456rem;
     margin-top: 10px;
-}
+    font-size: 1.2em;
+    font-family: "Courier New", monospace;
+  }

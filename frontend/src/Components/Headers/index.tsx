@@ -27,8 +27,11 @@ const Header = () => {
 
       {!linkSuccess ? (
         <>
-          <h3 className={styles.title}>CashControl</h3>
-          <h2></h2>
+           <div className={styles.logo} />
+          <div className={styles.chip} />
+           <div className={styles.cardNumber}>
+            1234 5678 9012 3456
+          </div>
           {/* message if backend is not running and there is no link token */}
           {!backend ? (
             <Callout warning>
