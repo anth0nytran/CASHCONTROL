@@ -34,11 +34,12 @@ const CreditCard = ({ name = '', number = '', totalSpending = '', accountBalance
             <IonCardTitle className={styles.total_balance_label}>Total Balance</IonCardTitle>
           </div>
         </div>
+        <p className={styles.fine_print}>More Information On The Back <span className={styles.arrow}>↻</span></p>
       </IonCard>
 
         <IonCard className={styles.ionCard} onClick={handleClick}>
           <IonCardHeader>
-            <IonCardTitle>Personal Information</IonCardTitle>
+            <IonCardTitle className ={styles.personalinfo_label}>Personal Information</IonCardTitle>
             <IonCardSubtitle className ="">{userProfile}</IonCardSubtitle>
           </IonCardHeader>
         </IonCard>

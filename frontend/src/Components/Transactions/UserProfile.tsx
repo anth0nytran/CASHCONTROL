@@ -55,13 +55,13 @@ const UserProfile: React.FC<UserProfileProps> = ({ accessToken = '' }) => {
   }, [accessToken]);
 
   return (
-    <div>
+    <div className={styles.personal_info_container}>
       {identity && (
         <>
-          <p>Name: {identity.name}</p>
-          <p>Address: {identity.address}</p>
-          <p>Email: {identity.email}</p>
-          <p>Phone: {identity.phone}</p>
+          <p style={{ color: 'white' }}>Name: {identity.name}</p>
+          <p style={{ color: 'white' }}>Address: {identity.address}</p>
+          <p style={{ color: 'white' }}>Email: {identity.email}</p>
+          <p style={{ color: 'white' }}>Phone: {identity.phone}</p>
         </>
       )}
     </div>

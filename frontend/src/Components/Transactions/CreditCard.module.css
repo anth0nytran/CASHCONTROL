@@ -3,17 +3,20 @@
     width: 350px;
     perspective: 1000px;
   }
+  .personalinfo_label{
+    color:white;
+  }
   
   .ionCard {
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    background: linear-gradient(45deg, #4b6cb7, #182848);
-    background-image: linear-gradient(#453F78, #3F2E56,#401F3E);
+    /* background: linear-gradient(45deg, #4b6cb7, #182848); */
+    background: linear-gradient(45deg, #1e88e5, #512da8);
     color: white;
     height: 220px;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
   }
 
 .card_logo {
@@ -40,8 +43,13 @@
   transform: translateY(-50%);
 }
 .name_number {
-    font-size: 14px;
-    letter-spacing: 2px;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  top: 35%;
+  transform: translate(-50%, -50%);
 }
 
 .card_info {
@@ -50,8 +58,8 @@
   align-items: center;
   color: #ffffff;
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 55%;
+  left: 55%;
   transform: translate(-50%, -50%);
 }
 
@@ -67,10 +75,30 @@
   margin-top: 5px;
 }
 
-.total_spending_label,
+.total_spending_label {
+  font-size: 0.8em;
+  margin: 0;
+  color: white;
+  margin-left: -8px; /* Adjust the position of the "Total Spending (30d)" label */
+}
+
+.fine_print {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.4em; 
+  color: white; /* Set the text color to white */
+  opacity: 0.8;
+  white-space: nowrap;
+}
+.arrow {
+  margin-left: 3px; 
+}
 .total_balance_label {
   font-size: 0.8em;
   margin: 0;
+  color: white;
 }
 .fine_print {
   position: absolute;
@@ -84,6 +112,7 @@
   margin: 0;
   font-size: 1.2em;
   font-family: "Courier New", monospace;
+  color: white;
 }
 
 
